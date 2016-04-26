@@ -1,74 +1,20 @@
-using System;
-    2 using System.Linq;
-    3 
-    4 namespace NG.StatisticsEngine
-    5 {
-   12     public static class QuartileExtension
-   13     {
-   19         public static double LowerQuartile(this double[] values)
-   20         {
-   21             return LowerQuartile(values.OrderBy(v => v));
-   22         }
-   23 
-   29         public static double LowerQuartile(this IOrderedEnumerable<double> values)
-   30         {
-   31             return GetQuartile(values, 0.25);
-   32         }
-   33 
-   39         public static double UpperQuartile(this double[] values)
-   40         {
-   41             return UpperQuartile(values.OrderBy(v => v));
-   42         }
-   43 
-   49         public static double UpperQuartile(this IOrderedEnumerable<double> values)
-   50         {
-   51             return GetQuartile(values, 0.75);
-   52         }
-   53 
-   59         public static double MiddleQuartile(this double[] values)
-   60         {
-   61             return MiddleQuartile(values.OrderBy(v => v));
-   62         }
-   63 
-   69         public static double MiddleQuartile(this IOrderedEnumerable<double> values)
-   70         {
-   71             return GetQuartile(values, 0.50);
-   72         }
-   73 
-   82         public static double InterQuartileRange(this double[] values)
-   83         {
-   84             return InterQuartileRange(values.OrderBy(v => v));
-   85         }
-   86 
-   95         public static double InterQuartileRange(this IOrderedEnumerable<double> values)
-   96         {
-   97             return values.UpperQuartile() - values.LowerQuartile();
-   98         }
-   99 
-  106         private static double GetQuartile(IOrderedEnumerable<double> list, double quartile)
-  107         {
-  108             if (list.Count() < 5) return 0;
-  109 
-  110             double result;
-  111             double index = quartile * (list.Count() + 1);
-  112             double remainder = index % 1;
-  113             index = Math.Floor(index) - 1;
-  114 
-  115             if (remainder.Equals(0)) result = list.ElementAt((int)index);
-  116             else
-  117             {
-  118                 double value = list.ElementAt((int)index);
-  119                 double interpolateIndex = index + 1;
-  120                 double interpolationValue = value.Interpolate(list.ElementAt((int)(index + 1)), remainder);
-  121                 result = value + interpolationValue;
-  122             }
-  123 
-  124             return result;
-  125         }
-  126 
-  127         private static double Interpolate(this double a, double b, double remainder)
-  128         {
-  129             return (b - a) * remainder;
-  130         }
-  131     }
-  132 }
+ double maximum = data.UpperQuartile() + 1.5 * data.InterQuartileRange();
+            double minimum = data.LowerQuartile() - 1.5 * data.InterQuartileRange();
+ 
+            if (IsRemoveOutlier) data = data.Where(d => d < maximum && d > minimum).ToArray();
+ 
+            this.Series["BoxPlot"].Points.Add(new SeriesPoint(name, new double[] { minimum, maximum, data.UpperQuartile(), data.LowerQuartile() }));
+            this.Series["Mean"].Points.Add(new SeriesPoint(name, data.Mean()));
+            this.Series["Median"].Points.Add(new SeriesPoint(name, data.Median(), data.Median()));
+            if (data.Modes().Length > 0)
+            {
+                this.Series["Modes"].Points.Add(new SeriesPoint(name, data.Modes()));
+            }
+            this.Series["Maximum"].Points.Add(new SeriesPoint(name, maximum, maximum));
+            this.Series["Minimum"].Points.Add(new SeriesPoint(name, minimum, minimum));
+ 
+            if (data.Max() > maximum) this.Series["MaxOutlier"].Points.Add(new SeriesPoint(name, data.Where(v => v > maximum).ToArray()));
+            if (data.Min() < minimum) this.Series["MinOutlier"].Points.Add(new SeriesPoint(name, data.Where(v => v < minimum).ToArray()));
+ 
+            ((RangeBarSeriesView)this.Series["Maximum"].View).BarWidth = 0.2;
+            ((RangeBarSeriesView)this.Series["Minimum"].View).BarWidth = 0.2;
