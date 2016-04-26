@@ -1,20 +1,78 @@
- double maximum = data.UpperQuartile() + 1.5 * data.InterQuartileRange();
-            double minimum = data.LowerQuartile() - 1.5 * data.InterQuartileRange();
- 
-            if (IsRemoveOutlier) data = data.Where(d => d < maximum && d > minimum).ToArray();
- 
-            this.Series["BoxPlot"].Points.Add(new SeriesPoint(name, new double[] { minimum, maximum, data.UpperQuartile(), data.LowerQuartile() }));
-            this.Series["Mean"].Points.Add(new SeriesPoint(name, data.Mean()));
-            this.Series["Median"].Points.Add(new SeriesPoint(name, data.Median(), data.Median()));
-            if (data.Modes().Length > 0)
-            {
-                this.Series["Modes"].Points.Add(new SeriesPoint(name, data.Modes()));
-            }
-            this.Series["Maximum"].Points.Add(new SeriesPoint(name, maximum, maximum));
-            this.Series["Minimum"].Points.Add(new SeriesPoint(name, minimum, minimum));
- 
-            if (data.Max() > maximum) this.Series["MaxOutlier"].Points.Add(new SeriesPoint(name, data.Where(v => v > maximum).ToArray()));
-            if (data.Min() < minimum) this.Series["MinOutlier"].Points.Add(new SeriesPoint(name, data.Where(v => v < minimum).ToArray()));
- 
-            ((RangeBarSeriesView)this.Series["Maximum"].View).BarWidth = 0.2;
-            ((RangeBarSeriesView)this.Series["Minimum"].View).BarWidth = 0.2;
+using System;
+    2 using System.Collections.Generic;
+    3 using System.Linq;
+    4 
+    5 namespace NG.StatisticsEngine
+    6 {
+   10     public static class AverageExtension
+   11     {
+   18         public static double Mean(this double[] values)
+   19         {
+   20             return Mean(values.AsEnumerable());
+   21         }
+   22 
+   29         public static double Mean(this IEnumerable<double> values)
+   30         {
+   31             return values.Average();
+   32         }
+   33 
+   41         public static double Median(this double[] values)
+   42         {
+   43             return Median(values.AsEnumerable());
+   44         }
+   45 
+   53         public static double Median(this IEnumerable<double> values)
+   54         {
+   55             List<double> orderedList = values
+   56                 .OrderBy(numbers => numbers)
+   57                 .ToList();
+   58 
+   59             int listSize = orderedList.Count;
+   60             double result;
+   61 
+   62             if (listSize % 2 == 0) // even
+   63             {
+   64                 int midIndex = listSize / 2;
+   65                 result = ((orderedList.ElementAt(midIndex - 1) +
+   66                            orderedList.ElementAt(midIndex)) / 2);
+   67             }
+   68             else // odd
+   69             {
+   70                 double element = (double)listSize / 2;
+   71                 element = Math.Round(element, MidpointRounding.AwayFromZero);
+   72 
+   73                 result = orderedList.ElementAt((int)(element - 1));
+   74             }
+   75 
+   76             return result;
+   77         }
+   78 
+   86         public static double[] Modes(this double[] values)
+   87         {
+   88             return Modes(values.AsEnumerable()).ToArray();
+   89         }
+   90 
+   98         public static IEnumerable<double> Modes(this IEnumerable<double> values)
+   99         {
+  100             var list = values.Where(v => v == 0).ToList();
+  101             int cnt = list.Count;
+  102 
+  103             var modesList = values
+  104                 .GroupBy(group => group)
+  105                 .Select(valueCluster =>
+  106                         new
+  107                         {
+  108                             Value = valueCluster.Key,
+  109                             Occurrence = valueCluster.Count(),
+  110                         })
+  111                 .ToList();
+  112 
+  113             int maxOccurrence = modesList
+  114                 .Max(g => g.Occurrence);
+  115 
+  116             return modesList
+  117                 .Where(x => x.Occurrence == maxOccurrence && maxOccurrence > 1)
+  118                 .Select(x => x.Value);
+  119         }
+  120     }
+  121 }
