@@ -1,0 +1,152 @@
+namespace chartSortSample
+{
+    partial class Form1
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
+            DevExpress.XtraCharts.LineSeriesView lineSeriesView1 = new DevExpress.XtraCharts.LineSeriesView();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
+            this.pivotGridControl1 = new DevExpress.XtraPivotGrid.PivotGridControl();
+            this.FLD_Name = new DevExpress.XtraPivotGrid.PivotGridField();
+            this.FLD_Date = new DevExpress.XtraPivotGrid.PivotGridField();
+            this.FLD_Value = new DevExpress.XtraPivotGrid.PivotGridField();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pivotGridControl1)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.chartControl1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.pivotGridControl1);
+            this.splitContainer1.Size = new System.Drawing.Size(737, 488);
+            this.splitContainer1.SplitterDistance = 250;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // chartControl1
+            // 
+            this.chartControl1.DataSource = this.pivotGridControl1;
+            xyDiagram1.AxisX.Title.Text = "Date";
+            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
+            xyDiagram1.AxisY.Title.Text = "Value";
+            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
+            this.chartControl1.Diagram = xyDiagram1;
+            this.chartControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chartControl1.Legend.MaxHorizontalPercentage = 30D;
+            this.chartControl1.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
+            this.chartControl1.Location = new System.Drawing.Point(0, 0);
+            this.chartControl1.Name = "chartControl1";
+            this.chartControl1.SeriesDataMember = "Series";
+            this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
+            this.chartControl1.SeriesTemplate.ArgumentDataMember = "Arguments";
+            this.chartControl1.SeriesTemplate.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.Qualitative;
+            this.chartControl1.SeriesTemplate.ValueDataMembersSerializable = "Values";
+            this.chartControl1.SeriesTemplate.View = lineSeriesView1;
+            this.chartControl1.Size = new System.Drawing.Size(737, 250);
+            this.chartControl1.TabIndex = 0;
+            // 
+            // pivotGridControl1
+            // 
+            this.pivotGridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pivotGridControl1.Fields.AddRange(new DevExpress.XtraPivotGrid.PivotGridField[] {
+            this.FLD_Name,
+            this.FLD_Date,
+            this.FLD_Value});
+            this.pivotGridControl1.Location = new System.Drawing.Point(0, 0);
+            this.pivotGridControl1.Name = "pivotGridControl1";
+            this.pivotGridControl1.Size = new System.Drawing.Size(737, 234);
+            this.pivotGridControl1.TabIndex = 0;
+            // 
+            // FLD_Name
+            // 
+            this.FLD_Name.Area = DevExpress.XtraPivotGrid.PivotArea.ColumnArea;
+            this.FLD_Name.AreaIndex = 0;
+            this.FLD_Name.FieldName = "Name";
+            this.FLD_Name.Name = "FLD_Name";
+            // 
+            // FLD_Date
+            // 
+            this.FLD_Date.Area = DevExpress.XtraPivotGrid.PivotArea.RowArea;
+            this.FLD_Date.AreaIndex = 0;
+            this.FLD_Date.FieldName = "Date";
+            this.FLD_Date.Name = "FLD_Date";
+            // 
+            // FLD_Value
+            // 
+            this.FLD_Value.Area = DevExpress.XtraPivotGrid.PivotArea.DataArea;
+            this.FLD_Value.AreaIndex = 0;
+            this.FLD_Value.FieldName = "Value";
+            this.FLD_Value.Name = "FLD_Value";
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(737, 488);
+            this.Controls.Add(this.splitContainer1);
+            this.Name = "Form1";
+            this.Text = "Form1";
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pivotGridControl1)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private DevExpress.XtraCharts.ChartControl chartControl1;
+        private DevExpress.XtraPivotGrid.PivotGridControl pivotGridControl1;
+        private DevExpress.XtraPivotGrid.PivotGridField FLD_Name;
+        private DevExpress.XtraPivotGrid.PivotGridField FLD_Date;
+        private DevExpress.XtraPivotGrid.PivotGridField FLD_Value;
+    }
+}
+
